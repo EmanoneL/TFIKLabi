@@ -15,9 +15,7 @@ namespace TFIKLabi
         public Form1()
         {
             InitializeComponent();
-            //пупупупупупупупупу
 
-            int text = 0;
         }
 
     }
