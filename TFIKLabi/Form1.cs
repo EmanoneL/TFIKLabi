@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,132 @@ namespace TFIKLabi
         public Form1()
         {
             InitializeComponent();
+            //toolStripMenuItem1.Click += ToolStripMenuItem1_Click;
 
         }
 
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)    //обработчик создать файл
+        {
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.Title = "Save a file";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                File.WriteAllText(filePath, string.Empty);
+
+                OpenFile(filePath);
+            }
+
+        }
+        private void OpenFile(string filePath)  //открыть файл после создания
+        {
+            string fileName = Path.GetFileName(filePath);
+
+            TabPage tabPage = new TabPage(fileName);
+            tabControl1.TabPages.Add(tabPage);
+
+            RichTextBox richTextBox = new RichTextBox();
+            richTextBox.Dock = DockStyle.Fill;
+            tabPage.Controls.Add(richTextBox);
+
+            try
+            {
+                string fileContent = File.ReadAllText(filePath);
+                richTextBox.Text = fileContent;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)    //обработчик открыть файл
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                string fileContent = File.ReadAllText(filePath);
+
+                TabPage tabPage = new TabPage(Path.GetFileName(filePath));
+                tabControl1.TabPages.Add(tabPage);
+
+                RichTextBox richTextBox = new RichTextBox();
+                richTextBox.Dock = DockStyle.Fill;
+                richTextBox.Text = fileContent;
+                tabPage.Controls.Add(richTextBox);
+
+            }
+
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)     //обработчик сохранения файла
+        {
+            //не поняла как сделать
+        }
+
+        private void SaveKaK()
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (richTextBox != null)
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
+                    }
+                }
+            }
+        }
+
+        private void сохранитьКакToolStripMenuItem_Click(object sender, EventArgs e)      //обработчик - сохранить как
+        {
+            SaveKaK();
+        }
+
+        private void CloseFile()       //не знаю как закрывать файл и надо ли
+        {
+            //TabPage currentPage = tabControl1.SelectedTab;
+            //if (currentPage != null)
+            //{
+            //    RichTextBox currentRichTextBox = currentPage.Controls.OfType<RichTextBox>().FirstOrDefault();
+            //    if (currentRichTextBox != null)
+            //    {
+            //        string fileContent = currentRichTextBox.Text;
+
+            //        if (fileContent != File.ReadAllText(currentPage.Text))
+            //        {
+            //            DialogResult result = MessageBox.Show("Сохранить изменения?", "Предупреждение", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+            //            if (result == DialogResult.Yes)
+            //            {
+            //                SaveKaK();
+            //            }
+            //            else if (result == DialogResult.Cancel)
+            //            {
+            //                return; // Отмена закрытия файла
+            //            }
+            //        }
+
+            //        tabControl1.TabPages.Remove(currentPage);
+            //    }
+            //}
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)    //выход из программы но не сохранили изменения
+        {
+            //CloseFile();  
+            Application.Exit();
+            //  НЕ ЗНАЮ КАК ПРЕДЛОЖИТЬ СОХРАНИТЬ ФАЙЛ, ЕСЛИ НЕ СОХРАНЕН, НО ЕСТЬ ФУНКЦИЯ SaveKaK()
+        }
     }
 }
