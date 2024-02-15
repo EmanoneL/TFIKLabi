@@ -16,6 +16,8 @@ namespace TFIKLabi
         {
             InitializeComponent();
             //пупупупупупупупупу
+
+            int text = 0;
         }
 
     }
