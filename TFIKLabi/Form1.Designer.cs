@@ -29,6 +29,16 @@ namespace TFIKLabi
         /// </summary>
         private void InitializeComponent()
         {
+
+  
+              // 
+            // textBox1
+            // 
+            textBox1.Location = new System.Drawing.Point(381, 172);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new System.Drawing.Size(302, 27);
+            textBox1.TabIndex = 0;
+          /////
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -92,6 +102,7 @@ namespace TFIKLabi
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
+
     }
 }
 
