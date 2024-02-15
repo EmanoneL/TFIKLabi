@@ -34,6 +34,7 @@ namespace TFIKLabi
               // 
             // textBox1
             // 
+
           /////
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();

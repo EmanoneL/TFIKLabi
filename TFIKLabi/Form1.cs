@@ -19,6 +19,10 @@ namespace TFIKLabi
             int b = 4;
             b++;
             
+            //пупупупупупупупупу
+
+            int text = 0;
+
         }
 
     }
