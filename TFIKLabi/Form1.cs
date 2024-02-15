@@ -16,6 +16,8 @@ namespace TFIKLabi
         {
             InitializeComponent();
             //виаптьиапгешщшщ
+            int b = 4;
+            b++;
             
         }
 
