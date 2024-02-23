@@ -133,44 +133,50 @@ namespace TFIKLabi
             // отменитьToolStripMenuItem
             // 
             отменитьToolStripMenuItem.Name = "отменитьToolStripMenuItem";
-            отменитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            отменитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             отменитьToolStripMenuItem.Text = "Отменить";
+            отменитьToolStripMenuItem.Click += отменитьToolStripMenuItem_Click;
             // 
             // повторитьToolStripMenuItem
             // 
             повторитьToolStripMenuItem.Name = "повторитьToolStripMenuItem";
-            повторитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            повторитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             повторитьToolStripMenuItem.Text = "Повторить";
             // 
             // вырезатьToolStripMenuItem
             // 
             вырезатьToolStripMenuItem.Name = "вырезатьToolStripMenuItem";
-            вырезатьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            вырезатьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             вырезатьToolStripMenuItem.Text = "Вырезать";
+            вырезатьToolStripMenuItem.Click += вырезатьToolStripMenuItem_Click;
             // 
             // копироватьToolStripMenuItem
             // 
             копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            копироватьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            копироватьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             копироватьToolStripMenuItem.Text = "Копировать";
+            копироватьToolStripMenuItem.Click += копироватьToolStripMenuItem_Click;
             // 
             // вставитьToolStripMenuItem
             // 
             вставитьToolStripMenuItem.Name = "вставитьToolStripMenuItem";
-            вставитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            вставитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             вставитьToolStripMenuItem.Text = "Вставить";
+            вставитьToolStripMenuItem.Click += вставитьToolStripMenuItem_Click;
             // 
             // удалитьToolStripMenuItem
             // 
             удалитьToolStripMenuItem.Name = "удалитьToolStripMenuItem";
-            удалитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            удалитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             удалитьToolStripMenuItem.Text = "Удалить";
+            удалитьToolStripMenuItem.Click += удалитьToolStripMenuItem_Click;
             // 
             // выделитьВсеToolStripMenuItem
             // 
             выделитьВсеToolStripMenuItem.Name = "выделитьВсеToolStripMenuItem";
-            выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             выделитьВсеToolStripMenuItem.Text = "Выделить все";
+            выделитьВсеToolStripMenuItem.Click += выделитьВсеToolStripMenuItem_Click;
             // 
             // постановкаЗадачиToolStripMenuItem
             // 
@@ -338,9 +344,9 @@ namespace TFIKLabi
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            statusStrip1.Location = new System.Drawing.Point(0, 426);
+            statusStrip1.Location = new System.Drawing.Point(0, 428);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new System.Drawing.Size(800, 24);
+            statusStrip1.Size = new System.Drawing.Size(800, 22);
             statusStrip1.TabIndex = 12;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -360,6 +366,7 @@ namespace TFIKLabi
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new System.Drawing.Size(776, 202);
             tabControl1.TabIndex = 13;
+            tabControl1.DockChanged += отменитьToolStripMenuItem_Click;
             // 
             // Form1
             // 
