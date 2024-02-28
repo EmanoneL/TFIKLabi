@@ -133,44 +133,50 @@ namespace TFIKLabi
             // отменитьToolStripMenuItem
             // 
             отменитьToolStripMenuItem.Name = "отменитьToolStripMenuItem";
-            отменитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            отменитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             отменитьToolStripMenuItem.Text = "Отменить";
+            отменитьToolStripMenuItem.Click += отменитьToolStripMenuItem_Click;
             // 
             // повторитьToolStripMenuItem
             // 
             повторитьToolStripMenuItem.Name = "повторитьToolStripMenuItem";
-            повторитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            повторитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             повторитьToolStripMenuItem.Text = "Повторить";
             // 
             // вырезатьToolStripMenuItem
             // 
             вырезатьToolStripMenuItem.Name = "вырезатьToolStripMenuItem";
-            вырезатьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            вырезатьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             вырезатьToolStripMenuItem.Text = "Вырезать";
+            вырезатьToolStripMenuItem.Click += вырезатьToolStripMenuItem_Click;
             // 
             // копироватьToolStripMenuItem
             // 
             копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            копироватьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            копироватьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             копироватьToolStripMenuItem.Text = "Копировать";
+            копироватьToolStripMenuItem.Click += копироватьToolStripMenuItem_Click;
             // 
             // вставитьToolStripMenuItem
             // 
             вставитьToolStripMenuItem.Name = "вставитьToolStripMenuItem";
-            вставитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            вставитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             вставитьToolStripMenuItem.Text = "Вставить";
+            вставитьToolStripMenuItem.Click += вставитьToolStripMenuItem_Click;
             // 
             // удалитьToolStripMenuItem
             // 
             удалитьToolStripMenuItem.Name = "удалитьToolStripMenuItem";
-            удалитьToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            удалитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             удалитьToolStripMenuItem.Text = "Удалить";
+            удалитьToolStripMenuItem.Click += удалитьToolStripMenuItem_Click;
             // 
             // выделитьВсеToolStripMenuItem
             // 
             выделитьВсеToolStripMenuItem.Name = "выделитьВсеToolStripMenuItem";
-            выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             выделитьВсеToolStripMenuItem.Text = "Выделить все";
+            выделитьВсеToolStripMenuItem.Click += выделитьВсеToolStripMenuItem_Click;
             // 
             // постановкаЗадачиToolStripMenuItem
             // 
@@ -249,7 +255,9 @@ namespace TFIKLabi
             // button1
             // 
             button1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            button1.BackgroundImage = (System.Drawing.Image)resources.GetObject("button1.BackgroundImage");
+            button1.BackgroundImage = Properties.Resources.file1;
+            button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             button1.Location = new System.Drawing.Point(12, 39);
             button1.Name = "button1";
             button1.Size = new System.Drawing.Size(35, 35);
@@ -258,57 +266,78 @@ namespace TFIKLabi
             // 
             // button2
             // 
-            button2.Location = new System.Drawing.Point(68, 39);
+            button2.BackgroundImage = Properties.Resources.papka;
+            button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button2.Location = new System.Drawing.Point(53, 39);
             button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(29, 35);
+            button2.Size = new System.Drawing.Size(35, 35);
             button2.TabIndex = 5;
             button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            button3.Location = new System.Drawing.Point(103, 39);
+            button3.BackgroundImage = (System.Drawing.Image)resources.GetObject("button3.BackgroundImage");
+            button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button3.Location = new System.Drawing.Point(94, 39);
             button3.Name = "button3";
-            button3.Size = new System.Drawing.Size(29, 35);
+            button3.Size = new System.Drawing.Size(35, 35);
             button3.TabIndex = 6;
             button3.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
+            button4.BackgroundImage = Properties.Resources.nazad;
+            button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button4.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             button4.Location = new System.Drawing.Point(172, 39);
             button4.Name = "button4";
-            button4.Size = new System.Drawing.Size(29, 35);
+            button4.Size = new System.Drawing.Size(35, 35);
             button4.TabIndex = 7;
             button4.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
-            button5.Location = new System.Drawing.Point(207, 39);
+            button5.BackgroundImage = Properties.Resources.wpered;
+            button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button5.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button5.Location = new System.Drawing.Point(213, 39);
             button5.Name = "button5";
-            button5.Size = new System.Drawing.Size(29, 35);
+            button5.Size = new System.Drawing.Size(35, 35);
             button5.TabIndex = 8;
             button5.UseVisualStyleBackColor = true;
             // 
             // button6
             // 
-            button6.Location = new System.Drawing.Point(242, 39);
+            button6.BackgroundImage = Properties.Resources.ctrl_c;
+            button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button6.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button6.Location = new System.Drawing.Point(254, 39);
             button6.Name = "button6";
-            button6.Size = new System.Drawing.Size(29, 35);
+            button6.Size = new System.Drawing.Size(35, 35);
             button6.TabIndex = 9;
             button6.UseVisualStyleBackColor = true;
             // 
             // button7
             // 
-            button7.Location = new System.Drawing.Point(277, 39);
+            button7.BackgroundImage = Properties.Resources.ctrl_v;
+            button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button7.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button7.Location = new System.Drawing.Point(295, 39);
             button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(29, 35);
+            button7.Size = new System.Drawing.Size(35, 35);
             button7.TabIndex = 10;
             button7.UseVisualStyleBackColor = true;
             // 
             // button8
             // 
-            button8.Location = new System.Drawing.Point(312, 39);
+            button8.BackgroundImage = Properties.Resources.ctrl_z;
+            button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button8.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button8.Location = new System.Drawing.Point(336, 39);
             button8.Name = "button8";
-            button8.Size = new System.Drawing.Size(29, 35);
+            button8.Size = new System.Drawing.Size(35, 35);
             button8.TabIndex = 11;
             button8.UseVisualStyleBackColor = true;
             // 
@@ -337,6 +366,7 @@ namespace TFIKLabi
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new System.Drawing.Size(776, 202);
             tabControl1.TabIndex = 13;
+            tabControl1.DockChanged += отменитьToolStripMenuItem_Click;
             // 
             // Form1
             // 

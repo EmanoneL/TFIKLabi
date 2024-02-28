@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TFIKLabi
 {
@@ -19,6 +20,7 @@ namespace TFIKLabi
             //toolStripMenuItem1.Click += ToolStripMenuItem1_Click;
 
         }
+
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)    //обработчик создать файл
         {
@@ -77,8 +79,16 @@ namespace TFIKLabi
                 richTextBox.Text = fileContent;
                 tabPage.Controls.Add(richTextBox);
 
+                richTextBox.TextChanged += RichTextBox_TextChanged;
+                richTextBox.TextChanged += RichTextBox_KeyDown;
+
             }
 
+        }
+
+        private void RichTextBox_KeyDown(object sender, EventArgs e)
+        {
+            previousText = ((RichTextBox)sender).Text;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)     //обработчик сохранения файла
@@ -143,5 +153,96 @@ namespace TFIKLabi
             Application.Exit();
             //  НЕ ЗНАЮ КАК ПРЕДЛОЖИТЬ СОХРАНИТЬ ФАЙЛ, ЕСЛИ НЕ СОХРАНЕН, НО ЕСТЬ ФУНКЦИЯ SaveKaK()
         }
+
+        private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            {
+                RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+                richTextBox.Text = previousText;
+            }
+        }
+
+        // richTextBox.TextChanged += RichTextBox_TextChanged;
+
+        private string previousText = "";
+
+
+        private void RichTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (sender is RichTextBox)
+            {
+                RichTextBox richTextBox = (RichTextBox)sender;
+                previousText = richTextBox.Text;
+            }
+        }
+
+        private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage currentTab = tabControl1.SelectedTab;
+            if (currentTab != null)
+            {
+                RichTextBox currentRichTextBox = currentTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (currentRichTextBox != null && currentRichTextBox.SelectionLength > 0)
+                {
+                    Clipboard.SetText(currentRichTextBox.SelectedText); // Копируем выделенный текст в буфер обмена
+                    currentRichTextBox.SelectedText = ""; // Удаляем выделенный текст из текущего RichTextBox
+                }
+            }
+        }
+
+        private void копироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage currentTab = tabControl1.SelectedTab;
+            if (currentTab != null)
+            {
+                RichTextBox currentRichTextBox = currentTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (currentRichTextBox != null && currentRichTextBox.SelectionLength > 0)
+                {
+                    Clipboard.SetText(currentRichTextBox.SelectedText); // Копируем выделенный текст в буфер обмена
+                }
+            }
+        }
+
+        private void вставитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage currentTab = tabControl1.SelectedTab;
+            if (currentTab != null)
+            {
+                RichTextBox currentRichTextBox = currentTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (currentRichTextBox != null)
+                {
+                    currentRichTextBox.SelectedText = Clipboard.GetText(); // Вставляем текст из буфера обмена в текущий RichTextBox
+                }
+            }
+        }
+
+        private void выделитьВсеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage currentTab = tabControl1.SelectedTab;
+            if (currentTab != null)
+            {
+                RichTextBox currentRichTextBox = currentTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (currentRichTextBox != null)
+                {
+                    currentRichTextBox.SelectAll(); // Выделяем весь текст в текущем RichTextBox
+                }
+            }
+        }
+
+        private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage currentTab = tabControl1.SelectedTab;
+            if (currentTab != null)
+            {
+                RichTextBox currentRichTextBox = currentTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (currentRichTextBox != null && currentRichTextBox.SelectionLength > 0)
+                {
+                    currentRichTextBox.SelectedText = ""; // Удаляем выделенный текст
+                }
+            }
+        }
     }
 }
+
