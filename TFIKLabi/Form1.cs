@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -94,16 +95,16 @@ namespace TFIKLabi
 
 
         // Сохранить 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)     
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
                 if (richTextBox != null)
                 {
-                    
+
                     File.WriteAllText(filePath, richTextBox.Text);
-                    
+
                 }
             }
         }
@@ -169,6 +170,11 @@ namespace TFIKLabi
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+            if (tabControl1.TabPages.Count == 0)
+            {
+                // Если нет открытых файлов, выходим из метода
+                return;
+            }
 
             if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
             {
@@ -259,10 +265,57 @@ namespace TFIKLabi
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (tabControl1.TabPages.Count == 0)
+            {
+                // Если нет открытых файлов, выходим из метода
+                return;
+            }
             if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
             {
                 RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
                 richTextBox.Redo();
+            }
+        }
+
+        private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = @"help.html";
+
+            try
+            {
+                Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start("cmd", $"/c start {filePath}");
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
+                }
+            }
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = @"about.html";
+
+            try
+            {
+                Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start("cmd", $"/c start {filePath}");
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
+                }
             }
         }
     }
