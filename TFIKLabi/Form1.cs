@@ -14,6 +14,7 @@ namespace TFIKLabi
 {
     public partial class Form1 : Form
     {
+        string filePath;
         public Form1()
         {
             InitializeComponent();
@@ -31,7 +32,7 @@ namespace TFIKLabi
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string filePath = saveFileDialog.FileName;
+                filePath = saveFileDialog.FileName;
 
                 File.WriteAllText(filePath, string.Empty);
 
@@ -68,7 +69,7 @@ namespace TFIKLabi
             openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string filePath = openFileDialog.FileName;
+                filePath = openFileDialog.FileName;
                 string fileContent = File.ReadAllText(filePath);
 
                 TabPage tabPage = new TabPage(Path.GetFileName(filePath));
@@ -91,9 +92,20 @@ namespace TFIKLabi
             previousText = ((RichTextBox)sender).Text;
         }
 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)     //обработчик сохранения файла
+
+        // Сохранить 
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)     
         {
-            //не поняла как сделать
+            if (tabControl1.SelectedTab != null)
+            {
+                RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (richTextBox != null)
+                {
+                    
+                    File.WriteAllText(filePath, richTextBox.Text);
+                    
+                }
+            }
         }
 
         private void SaveKaK()
@@ -157,10 +169,11 @@ namespace TFIKLabi
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+
             if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
             {
                 RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-                richTextBox.Text = previousText;
+                richTextBox.Undo();
             }
         }
 
@@ -241,6 +254,15 @@ namespace TFIKLabi
                 {
                     currentRichTextBox.SelectedText = ""; // Удаляем выделенный текст
                 }
+            }
+        }
+
+        private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            {
+                RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+                richTextBox.Redo();
             }
         }
     }

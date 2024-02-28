@@ -142,6 +142,7 @@ namespace TFIKLabi
             повторитьToolStripMenuItem.Name = "повторитьToolStripMenuItem";
             повторитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             повторитьToolStripMenuItem.Text = "Повторить";
+            повторитьToolStripMenuItem.Click += повторитьToolStripMenuItem_Click;
             // 
             // вырезатьToolStripMenuItem
             // 
@@ -434,4 +435,3 @@ namespace TFIKLabi
         private System.Windows.Forms.TabControl tabControl1;
     }
 }
-
