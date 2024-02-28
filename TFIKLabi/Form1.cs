@@ -259,10 +259,13 @@ namespace TFIKLabi
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            if (tabControl1.SelectedTab != null)
             {
-                RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-                richTextBox.Redo();
+                if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                {
+                    RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+                    richTextBox.Redo();
+                }
             }
         }
     }
