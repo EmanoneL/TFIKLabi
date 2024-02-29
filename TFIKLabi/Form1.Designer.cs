@@ -36,6 +36,7 @@ namespace TFIKLabi
             toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            закрытьФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             правкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             отменитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +69,7 @@ namespace TFIKLabi
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             tabControl1 = new System.Windows.Forms.TabControl();
-            закрытьФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            button9 = new System.Windows.Forms.Button();
             menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
@@ -92,35 +93,42 @@ namespace TFIKLabi
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
+            toolStripMenuItem2.Size = new System.Drawing.Size(192, 26);
             toolStripMenuItem2.Text = "Создать";
             toolStripMenuItem2.Click += toolStripMenuItem2_Click;
             // 
             // toolStripMenuItem3
             // 
             toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new System.Drawing.Size(224, 26);
+            toolStripMenuItem3.Size = new System.Drawing.Size(192, 26);
             toolStripMenuItem3.Text = "Открыть";
             toolStripMenuItem3.Click += toolStripMenuItem3_Click;
             // 
             // toolStripMenuItem4
             // 
             toolStripMenuItem4.Name = "toolStripMenuItem4";
-            toolStripMenuItem4.Size = new System.Drawing.Size(224, 26);
+            toolStripMenuItem4.Size = new System.Drawing.Size(192, 26);
             toolStripMenuItem4.Text = "Сохранить";
             toolStripMenuItem4.Click += toolStripMenuItem4_Click;
             // 
             // сохранитьКакToolStripMenuItem
             // 
             сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
-            сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
             сохранитьКакToolStripMenuItem.Text = "Сохранить как";
             сохранитьКакToolStripMenuItem.Click += сохранитьКакToolStripMenuItem_Click;
+            // 
+            // закрытьФайлToolStripMenuItem
+            // 
+            закрытьФайлToolStripMenuItem.Name = "закрытьФайлToolStripMenuItem";
+            закрытьФайлToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
+            закрытьФайлToolStripMenuItem.Text = "Закрыть файл";
+            закрытьФайлToolStripMenuItem.Click += закрытьФайлToolStripMenuItem_Click;
             // 
             // выходToolStripMenuItem
             // 
             выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            выходToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            выходToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
             выходToolStripMenuItem.Text = "Выход";
             выходToolStripMenuItem.Click += выходToolStripMenuItem_Click;
             // 
@@ -379,18 +387,24 @@ namespace TFIKLabi
             tabControl1.Size = new System.Drawing.Size(776, 202);
             tabControl1.TabIndex = 13;
             // 
-            // закрытьФайлToolStripMenuItem
+            // button9
             // 
-            закрытьФайлToolStripMenuItem.Name = "закрытьФайлToolStripMenuItem";
-            закрытьФайлToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            закрытьФайлToolStripMenuItem.Text = "Закрыть файл";
-            закрытьФайлToolStripMenuItem.Click += закрытьФайлToolStripMenuItem_Click;
+            button9.BackgroundImage = Properties.Resources.clein;
+            button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button9.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            button9.Location = new System.Drawing.Point(407, 39);
+            button9.Name = "button9";
+            button9.Size = new System.Drawing.Size(35, 35);
+            button9.TabIndex = 14;
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(button9);
             Controls.Add(tabControl1);
             Controls.Add(statusStrip1);
             Controls.Add(button8);
@@ -451,5 +465,6 @@ namespace TFIKLabi
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem закрытьФайлToolStripMenuItem;
+        private System.Windows.Forms.Button button9;
     }
 }
