@@ -30,7 +30,7 @@ namespace TFIKLabi
             string fileName = standartFileName + count + ".txt";
             while (File.Exists(fileName))
             {
-                fileName = $"Новый файл ({count}).txt";
+                fileName = $"{standartFileName}{count}" + ".txt";
                 count++;
             }
             return fileName;
@@ -129,7 +129,7 @@ namespace TFIKLabi
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-                string file = tabControl1.SelectedTab.Text;
+                string file = tabControl1.SelectedTab.Text + ".txt";
                 if (richTextBox != null)
                 {
 
