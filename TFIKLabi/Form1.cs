@@ -26,7 +26,7 @@ namespace TFIKLabi
 
         private string getNewFileName()
         {
-            int count = 1;
+            int count = 0;
             string fileName = standartFileName + count + ".txt";
             while (File.Exists(fileName))
             {
@@ -129,12 +129,13 @@ namespace TFIKLabi
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                string file = tabControl1.SelectedTab.Text;
                 if (richTextBox != null)
                 {
 
-                    if (System.IO.File.Exists(filePath))
+                    if (System.IO.File.Exists(file))
                     {
-                        File.WriteAllText(filePath, richTextBox.Text);
+                        File.WriteAllText(file, richTextBox.Text);
 
                     }
                     else
