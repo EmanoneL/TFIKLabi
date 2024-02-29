@@ -129,7 +129,7 @@ namespace TFIKLabi
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-                string file = tabControl1.SelectedTab.Text + ".txt";
+                string file = tabControl1.SelectedTab.Text;
                 if (richTextBox != null)
                 {
 
@@ -163,7 +163,7 @@ namespace TFIKLabi
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
-                        tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+                        tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName) + ".txt";
                     }
                 }
             }
