@@ -318,6 +318,15 @@ namespace TFIKLabi
                 }
             }
         }
+
+        private void закрытьФайлToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabControl tabControl = tabControl1; 
+            if (tabControl.SelectedTab != null)
+            {
+                tabControl.TabPages.Remove(tabControl.SelectedTab);
+            }
+        }
     }
 }
 

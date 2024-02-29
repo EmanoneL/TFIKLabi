@@ -68,6 +68,7 @@ namespace TFIKLabi
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             tabControl1 = new System.Windows.Forms.TabControl();
+            закрытьФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
@@ -83,7 +84,7 @@ namespace TFIKLabi
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripMenuItem4, сохранитьКакToolStripMenuItem, выходToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripMenuItem4, сохранитьКакToolStripMenuItem, закрытьФайлToolStripMenuItem, выходToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new System.Drawing.Size(59, 24);
             toolStripMenuItem1.Text = "Файл";
@@ -91,35 +92,35 @@ namespace TFIKLabi
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new System.Drawing.Size(192, 26);
+            toolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
             toolStripMenuItem2.Text = "Создать";
             toolStripMenuItem2.Click += toolStripMenuItem2_Click;
             // 
             // toolStripMenuItem3
             // 
             toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new System.Drawing.Size(192, 26);
+            toolStripMenuItem3.Size = new System.Drawing.Size(224, 26);
             toolStripMenuItem3.Text = "Открыть";
             toolStripMenuItem3.Click += toolStripMenuItem3_Click;
             // 
             // toolStripMenuItem4
             // 
             toolStripMenuItem4.Name = "toolStripMenuItem4";
-            toolStripMenuItem4.Size = new System.Drawing.Size(192, 26);
+            toolStripMenuItem4.Size = new System.Drawing.Size(224, 26);
             toolStripMenuItem4.Text = "Сохранить";
             toolStripMenuItem4.Click += toolStripMenuItem4_Click;
             // 
             // сохранитьКакToolStripMenuItem
             // 
             сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
-            сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
+            сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             сохранитьКакToolStripMenuItem.Text = "Сохранить как";
             сохранитьКакToolStripMenuItem.Click += сохранитьКакToolStripMenuItem_Click;
             // 
             // выходToolStripMenuItem
             // 
             выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            выходToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
+            выходToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             выходToolStripMenuItem.Text = "Выход";
             выходToolStripMenuItem.Click += выходToolStripMenuItem_Click;
             // 
@@ -244,14 +245,14 @@ namespace TFIKLabi
             // вызовСправкиToolStripMenuItem
             // 
             вызовСправкиToolStripMenuItem.Name = "вызовСправкиToolStripMenuItem";
-            вызовСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            вызовСправкиToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             вызовСправкиToolStripMenuItem.Text = "Вызов справки";
             вызовСправкиToolStripMenuItem.Click += вызовСправкиToolStripMenuItem_Click;
             // 
             // оПрограммеToolStripMenuItem
             // 
             оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
-            оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             оПрограммеToolStripMenuItem.Text = "О программе";
             оПрограммеToolStripMenuItem.Click += оПрограммеToolStripMenuItem_Click;
             // 
@@ -378,6 +379,13 @@ namespace TFIKLabi
             tabControl1.Size = new System.Drawing.Size(776, 202);
             tabControl1.TabIndex = 13;
             // 
+            // закрытьФайлToolStripMenuItem
+            // 
+            закрытьФайлToolStripMenuItem.Name = "закрытьФайлToolStripMenuItem";
+            закрытьФайлToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            закрытьФайлToolStripMenuItem.Text = "Закрыть файл";
+            закрытьФайлToolStripMenuItem.Click += закрытьФайлToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -442,5 +450,6 @@ namespace TFIKLabi
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.ToolStripMenuItem закрытьФайлToolStripMenuItem;
     }
 }
