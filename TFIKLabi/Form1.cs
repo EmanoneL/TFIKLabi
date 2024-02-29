@@ -15,6 +15,7 @@ namespace TFIKLabi
     public partial class Form1 : Form
     {
         string filePath;
+        string standartFileName = "NewFile";
         public Form1()
         {
             InitializeComponent();
@@ -22,22 +23,37 @@ namespace TFIKLabi
 
         }
 
+        private string getNewFileName()
+        {
+            int count = 1;
+            string fileName = standartFileName + count+".txt";
+            while (File.Exists(fileName))
+            {
+                fileName = $"Новый файл ({count}).txt";
+                count++;
+            }
+            return fileName;
 
+        }
         private void toolStripMenuItem2_Click(object sender, EventArgs e)    //обработчик создать файл
         {
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog.Title = "Save a file";
+            //SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            //saveFileDialog.Title = "Save a file";
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                filePath = saveFileDialog.FileName;
+            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    filePath = saveFileDialog.FileName;
 
-                File.WriteAllText(filePath, string.Empty);
+            //    // Создание файла не происходит
+            //    //File.WriteAllText(filePath, string.Empty); 
 
-                OpenFile(filePath);
-            }
+            //    OpenFile(filePath);
+            //}
+            filePath = getNewFileName();
+            OpenFile(filePath);
+
 
         }
         private void OpenFile(string filePath)  //открыть файл после создания
@@ -50,11 +66,12 @@ namespace TFIKLabi
             RichTextBox richTextBox = new RichTextBox();
             richTextBox.Dock = DockStyle.Fill;
             tabPage.Controls.Add(richTextBox);
+            tabControl1.SelectedTab = tabPage;
 
             try
             {
-                string fileContent = File.ReadAllText(filePath);
-                richTextBox.Text = fileContent;
+                //string fileContent = File.ReadAllText(filePath);
+                //richTextBox.Text = fileContent;
             }
             catch (Exception ex)
             {
@@ -80,6 +97,9 @@ namespace TFIKLabi
                 richTextBox.Text = fileContent;
                 tabPage.Controls.Add(richTextBox);
 
+                tabPage.Controls.Add(richTextBox);
+                tabControl1.SelectedTab = tabPage;
+
                 richTextBox.TextChanged += RichTextBox_TextChanged;
                 richTextBox.TextChanged += RichTextBox_KeyDown;
 
@@ -101,8 +121,16 @@ namespace TFIKLabi
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
                 if (richTextBox != null)
                 {
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        File.WriteAllText(filePath, richTextBox.Text);
+                        
+                    }
+                    else
+                    {
+                        SaveKaK();
+                    }
                     
-                    File.WriteAllText(filePath, richTextBox.Text);
                     
                 }
             }
@@ -117,9 +145,11 @@ namespace TFIKLabi
                 {
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
+                    saveFileDialog.FileName = tabControl1.SelectedTab.Text;
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
+                        tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
                     }
                 }
             }
