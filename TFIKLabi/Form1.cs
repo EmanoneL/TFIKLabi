@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace TFIKLabi
     public partial class Form1 : Form
     {
         string filePath;
+        string standartFileName = "NewFile";
         public Form1()
         {
             InitializeComponent();
@@ -22,39 +24,54 @@ namespace TFIKLabi
 
         }
 
+        private string getNewFileName()
+        {
+            int count = 1;
+            string fileName = standartFileName + count + ".txt";
+            while (File.Exists(fileName))
+            {
+                fileName = $"Новый файл ({count}).txt";
+                count++;
+            }
+            return fileName;
+
+        }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)    //обработчик создать файл
         {
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog.Title = "Save a file";
+            //SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            //saveFileDialog.Title = "Save a file";
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                filePath = saveFileDialog.FileName;
+            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    filePath = saveFileDialog.FileName;
 
-                File.WriteAllText(filePath, string.Empty);
+            //    File.WriteAllText(filePath, string.Empty);
 
-                OpenFile(filePath);
-            }
+            //    OpenFile(filePath);
+            //}
+            filePath = getNewFileName();
+            OpenFile(filePath);
+
 
         }
         private void OpenFile(string filePath)  //открыть файл после создания
         {
             string fileName = Path.GetFileName(filePath);
-
             TabPage tabPage = new TabPage(fileName);
-            tabControl1.TabPages.Add(tabPage);
-
-            RichTextBox richTextBox = new RichTextBox();
-            richTextBox.Dock = DockStyle.Fill;
-            tabPage.Controls.Add(richTextBox);
-
             try
             {
-                string fileContent = File.ReadAllText(filePath);
-                richTextBox.Text = fileContent;
+                
+
+                
+                tabControl1.TabPages.Add(tabPage);
+
+                RichTextBox richTextBox = new RichTextBox();
+                richTextBox.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(richTextBox);
+                tabControl1.SelectedTab = tabPage;
             }
             catch (Exception ex)
             {
@@ -70,8 +87,17 @@ namespace TFIKLabi
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog.FileName;
-                string fileContent = File.ReadAllText(filePath);
 
+                foreach (TabPage tab in tabControl1.TabPages)
+                {
+                    if (tab.Text == Path.GetFileName(filePath))
+                    {
+                        MessageBox.Show("Файл уже открыт во вкладке.");
+                        return;
+                    }
+                }
+
+                string fileContent = File.ReadAllText(filePath);
                 TabPage tabPage = new TabPage(Path.GetFileName(filePath));
                 tabControl1.TabPages.Add(tabPage);
 
@@ -80,10 +106,14 @@ namespace TFIKLabi
                 richTextBox.Text = fileContent;
                 tabPage.Controls.Add(richTextBox);
 
-                richTextBox.TextChanged += RichTextBox_TextChanged;
-                richTextBox.TextChanged += RichTextBox_KeyDown;
+                tabPage.Controls.Add(richTextBox);
+                tabControl1.SelectedTab = tabPage;
+
+                //richTextBox.TextChanged += RichTextBox_TextChanged;
+                //richTextBox.TextChanged += RichTextBox_KeyDown;
 
             }
+
 
         }
 
@@ -94,18 +124,29 @@ namespace TFIKLabi
 
 
         // Сохранить 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)     
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
                 if (richTextBox != null)
                 {
-                    
-                    File.WriteAllText(filePath, richTextBox.Text);
-                    
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        File.WriteAllText(filePath, richTextBox.Text);
+
+                    }
+                    else
+                    {
+                        SaveKaK();
+                    }
+
+
+
                 }
             }
+        
         }
 
         private void SaveKaK()
@@ -117,9 +158,11 @@ namespace TFIKLabi
                 {
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
+                    saveFileDialog.FileName = tabControl1.SelectedTab.Text;
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
+                        tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
                     }
                 }
             }
@@ -169,6 +212,11 @@ namespace TFIKLabi
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+            if (tabControl1.TabPages.Count == 0)
+            {
+                // Если нет открытых файлов, выходим из метода
+                return;
+            }
 
             if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
             {
@@ -259,12 +307,78 @@ namespace TFIKLabi
 
         private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (tabControl1.TabPages.Count == 0)
+            {
+                // Если нет открытых файлов, выходим из метода
+                return;
+            }
+            if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+            {
+                RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+                richTextBox.Redo();
+            }
+        }
+
+        private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            string filePath = @"help.html";
+
+            try
+            {
+                Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start("cmd", $"/c start {filePath}");
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
+                }
+            }
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = @"about.html";
+
+            try
+            {
+                Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start("cmd", $"/c start {filePath}");
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
+                }
+            }
+        }
+
+        private void закрытьФайлToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabControl tabControl = tabControl1;
+            if (tabControl.SelectedTab != null)
+            {
+                tabControl.TabPages.Remove(tabControl.SelectedTab);
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
             if (tabControl1.SelectedTab != null)
             {
-                if (tabControl1.SelectedTab.Controls.Count > 0 && tabControl1.SelectedTab.Controls[0] is RichTextBox)
+                RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                if (richTextBox != null)
                 {
-                    RichTextBox richTextBox = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-                    richTextBox.Redo();
+                    richTextBox.Clear();
                 }
             }
         }
