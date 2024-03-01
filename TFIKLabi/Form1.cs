@@ -109,10 +109,20 @@ namespace TFIKLabi
                 tabPage.Controls.Add(richTextBox);
                 tabControl1.SelectedTab = tabPage;
 
+                //toolStripMenuItem4_Click(sender, e); // Проверяем, сохранен ли файл
+                //if (!IsFileSaved(tabPage))
+                //{
+                //    SaveKaK();
+                //}
+
                 //richTextBox.TextChanged += RichTextBox_TextChanged;
                 //richTextBox.TextChanged += RichTextBox_KeyDown;
 
             }
+           
+
+                
+            
 
 
         }
@@ -123,35 +133,79 @@ namespace TFIKLabi
         }
 
 
+
+        // Проверка, сохранен ли файл
+        private bool IsFileSaved(TabPage tabPage)
+        {
+            RichTextBox richTextBox = tabPage.Controls.OfType<RichTextBox>().FirstOrDefault();
+
+            if (richTextBox != null && tabPage.Tag != null)
+            {
+                string filePath = tabPage.Tag.ToString();
+                return System.IO.File.Exists(filePath);
+            }
+
+            return false;
+        }
+
         // Сохранить 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
+            //if (tabControl1.SelectedTab != null)
+            //{
+            //    RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            //    string file = tabControl1.SelectedTab.Text;
+            //    if (richTextBox != null)
+            //    {
+
+            //        if (System.IO.File.Exists(System.IO.Path.GetFullPath(file)))
+            //        {
+            //            File.WriteAllText(file, richTextBox.Text);
+
+            //        }
+            //        else
+            //        {
+            //            SaveKaK();
+            //        }
+            //    }
+            //}
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-                string file = tabControl1.SelectedTab.Text;
                 if (richTextBox != null)
                 {
-
-                    if (System.IO.File.Exists(file))
-                    {
-                        File.WriteAllText(file, richTextBox.Text);
-
-                    }
-                    else
+                    if (!IsFileSaved(tabControl1.SelectedTab))
                     {
                         SaveKaK();
                     }
-
-
-
+                    else
+                    {
+                        File.WriteAllText(filePath, richTextBox.Text);
+                    }
                 }
             }
-        
+
         }
+
+    
 
         private void SaveKaK()
         {
+            //if (tabControl1.SelectedTab != null)                //старый ф=вариант
+            //{
+            //    RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            //    if (richTextBox != null)
+            //    {
+            //        SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //        saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
+            //        saveFileDialog.FileName = tabControl1.SelectedTab.Text;
+            //        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //        {
+            //            File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
+            //            tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName) + ".txt";
+            //        }
+            //    }
+            //}
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
@@ -164,6 +218,8 @@ namespace TFIKLabi
                     {
                         File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
                         tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName) + ".txt";
+                        filePath = saveFileDialog.FileName; // Обновляем путь к файлу
+                        tabControl1.SelectedTab.Tag = filePath; // Сохраняем путь к файлу в Tag
                     }
                 }
             }
@@ -205,10 +261,28 @@ namespace TFIKLabi
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)    //выход из программы но не сохранили изменения
         {
-            //CloseFile();  
+            TabControl tabControl = tabControl1;
+
+            foreach (TabPage tabPage in tabControl.TabPages)
+            {
+                if (!IsFileSaved(tabPage))
+                {
+                    DialogResult result = MessageBox.Show("Файл " + tabPage.Text + " не сохранен. Хотите сохранить перед выходом?", "Предупреждение", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        // Сохранение файла
+                        SaveKaK();
+                    }
+                    else if (result == DialogResult.Cancel)
+                    {
+                        return; // Отмена выхода из программы
+                    }
+                }
+            }
+
             Application.Exit();
-            //  НЕ ЗНАЮ КАК ПРЕДЛОЖИТЬ СОХРАНИТЬ ФАЙЛ, ЕСЛИ НЕ СОХРАНЕН, НО ЕСТЬ ФУНКЦИЯ SaveKaK()
         }
+    
 
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -365,9 +439,31 @@ namespace TFIKLabi
 
         private void закрытьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TabControl tabControl = tabControl1;
+            //if (tabControl.SelectedTab != null)
+            //{
+            //    tabControl.TabPages.Remove(tabControl.SelectedTab);
+            //}
+
             TabControl tabControl = tabControl1;
             if (tabControl.SelectedTab != null)
             {
+                if (!IsFileSaved(tabControl.SelectedTab))
+                {
+
+                    // Пример вызова диалогового окна с предупреждением
+                    DialogResult result = MessageBox.Show("Файл не сохранен. Хотите сохранить перед закрытием?", "Предупреждение", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        // Сохранение файла
+                        SaveKaK();
+                    }
+                    else if (result == DialogResult.Cancel)
+                    {
+                        return; // Отмена закрытия файла
+                    }
+                }
+
                 tabControl.TabPages.Remove(tabControl.SelectedTab);
             }
         }
