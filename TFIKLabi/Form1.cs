@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -54,30 +55,61 @@ namespace TFIKLabi
             //}
             filePath = getNewFileName();
             OpenFile(filePath);
+            // toolStripMenuItem3_Click
 
 
         }
         private void OpenFile(string filePath)  //открыть файл после создания
         {
+            //string fileName = Path.GetFileName(filePath);
+            //TabPage tabPage = new TabPage(fileName);
+            //try
+            //{
+            //    tabControl1.TabPages.Add(tabPage);
+
+            //    RichTextBox richTextBox = new RichTextBox();
+            //    richTextBox.Dock = DockStyle.Fill;
+            //    tabPage.Controls.Add(richTextBox);
+            //    tabControl1.SelectedTab = tabPage;
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Error reading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    tabControl1.TabPages.Remove(tabPage);
+            //}
+
             string fileName = Path.GetFileName(filePath);
             TabPage tabPage = new TabPage(fileName);
             try
             {
-                
+                tabPage.Tag = filePath; // Сохраняем путь к файлу в Tag вкладки
 
-                
                 tabControl1.TabPages.Add(tabPage);
 
-                RichTextBox richTextBox = new RichTextBox();
-                richTextBox.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(richTextBox);
+                RichTextBox richTextBox1 = new RichTextBox();
+                richTextBox1.Width = 780; // Установка ширины элемента
+                richTextBox1.Height = 150;
+                //richTextBox.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(richTextBox1);
+
+                RichTextBox richTextBox2 = new RichTextBox();
+                richTextBox2.Width = 780; // Установка ширины элемента
+                richTextBox2.Height = 130;
+                richTextBox2.Location = new Point(0, richTextBox1.Height + 30);
+                //richTextBox.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(richTextBox2);
+
+
+
                 tabControl1.SelectedTab = tabPage;
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error reading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 tabControl1.TabPages.Remove(tabPage);
             }
+
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)    //обработчик открыть файл
@@ -101,29 +133,25 @@ namespace TFIKLabi
                 TabPage tabPage = new TabPage(Path.GetFileName(filePath));
                 tabControl1.TabPages.Add(tabPage);
 
-                RichTextBox richTextBox = new RichTextBox();
-                richTextBox.Dock = DockStyle.Fill;
-                richTextBox.Text = fileContent;
-                tabPage.Controls.Add(richTextBox);
+                RichTextBox richTextBox1 = new RichTextBox();
+                richTextBox1.Width = 780; // Установка ширины элемента
+                richTextBox1.Height = 150;
+                //richTextBox.Dock = DockStyle.Fill;
+                richTextBox1.Text = fileContent;
+                tabPage.Controls.Add(richTextBox1);
 
-                tabPage.Controls.Add(richTextBox);
+                RichTextBox richTextBox2 = new RichTextBox();
+                richTextBox2.Width = 780; // Установка ширины элемента
+                richTextBox2.Height = 130;
+                richTextBox2.Location = new Point(0, richTextBox1.Height + 30);
+                //richTextBox.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(richTextBox2);
+
+
                 tabControl1.SelectedTab = tabPage;
 
-                //toolStripMenuItem4_Click(sender, e); // Проверяем, сохранен ли файл
-                //if (!IsFileSaved(tabPage))
-                //{
-                //    SaveKaK();
-                //}
-
-                //richTextBox.TextChanged += RichTextBox_TextChanged;
-                //richTextBox.TextChanged += RichTextBox_KeyDown;
 
             }
-           
-
-                
-            
-
 
         }
 
@@ -169,6 +197,7 @@ namespace TFIKLabi
             //        }
             //    }
             //}
+            //////////////////////////////////////////////////////////////////////////последний вариант
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
@@ -185,27 +214,14 @@ namespace TFIKLabi
                 }
             }
 
+
         }
 
-    
+
 
         private void SaveKaK()
         {
-            //if (tabControl1.SelectedTab != null)                //старый ф=вариант
-            //{
-            //    RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            //    if (richTextBox != null)
-            //    {
-            //        SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //        saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
-            //        saveFileDialog.FileName = tabControl1.SelectedTab.Text;
-            //        if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //        {
-            //            File.WriteAllText(saveFileDialog.FileName, richTextBox.Text);
-            //            tabControl1.SelectedTab.Text = Path.GetFileNameWithoutExtension(saveFileDialog.FileName) + ".txt";
-            //        }
-            //    }
-            //}
+
             if (tabControl1.SelectedTab != null)
             {
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
@@ -282,7 +298,7 @@ namespace TFIKLabi
 
             Application.Exit();
         }
-    
+
 
         private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -478,6 +494,72 @@ namespace TFIKLabi
                     richTextBox.Clear();
                 }
             }
+        }
+        private void SearchFileNames()
+        {
+            if (tabControl1.TabPages.Count == 0)
+            {
+                MessageBox.Show("Нет открытых файлов для поиска.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            TabPage activeTab = tabControl1.SelectedTab;
+            RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
+            {
+                string text = activeRichTextBox.Text;
+                Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+                MatchCollection matches = regex.Matches(text);
+
+                //richTextBox2.Clear();
+                foreach (Match match in matches)
+                {
+                    RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+                    textOutput.AppendText(match.Value + Environment.NewLine);
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            //if (tabControl1.TabPages.Count == 0)
+            //{
+            //    MessageBox.Show("Нет открытых файлов для поиска.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+
+            //TabPage activeTab = tabControl1.SelectedTab;
+            //RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            //if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
+            //{
+            //    string text = activeRichTextBox.Text;
+            //    Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+            //    MatchCollection matches = regex.Matches(text);
+
+            //    richTextBox2.Clear();
+            //    foreach (Match match in matches)
+            //    {
+            //        richTextBox2.AppendText(match.Value + Environment.NewLine);
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
+        }
+        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            SearchFileNames();
+
+        }
+
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Вызываем метод обработки события пускToolStripMenuItem_Click для обновления результатов при смене вкладки
+            //пускToolStripMenuItem_Click(sender, e);
         }
     }
 }

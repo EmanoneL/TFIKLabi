@@ -67,7 +67,6 @@ namespace TFIKLabi
             button7 = new System.Windows.Forms.Button();
             button8 = new System.Windows.Forms.Button();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
-            richTextBox2 = new System.Windows.Forms.RichTextBox();
             tabControl1 = new System.Windows.Forms.TabControl();
             button9 = new System.Windows.Forms.Button();
             menuStrip2.SuspendLayout();
@@ -242,6 +241,7 @@ namespace TFIKLabi
             пускToolStripMenuItem.Name = "пускToolStripMenuItem";
             пускToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             пускToolStripMenuItem.Text = "Пуск";
+            пускToolStripMenuItem.Click += пускToolStripMenuItem_Click;
             // 
             // справкаToolStripMenuItem
             // 
@@ -370,22 +370,14 @@ namespace TFIKLabi
             statusStrip1.TabIndex = 12;
             statusStrip1.Text = "statusStrip1";
             // 
-            // richTextBox2
-            // 
-            richTextBox2.Location = new System.Drawing.Point(12, 288);
-            richTextBox2.Name = "richTextBox2";
-            richTextBox2.ReadOnly = true;
-            richTextBox2.Size = new System.Drawing.Size(776, 120);
-            richTextBox2.TabIndex = 3;
-            richTextBox2.Text = "";
-            // 
             // tabControl1
             // 
             tabControl1.Location = new System.Drawing.Point(12, 80);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(776, 202);
+            tabControl1.Size = new System.Drawing.Size(776, 345);
             tabControl1.TabIndex = 13;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // button9
             // 
@@ -415,7 +407,6 @@ namespace TFIKLabi
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
-            Controls.Add(richTextBox2);
             Controls.Add(menuStrip2);
             Name = "Form1";
             Text = "Form1";
@@ -462,7 +453,6 @@ namespace TFIKLabi
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem закрытьФайлToolStripMenuItem;
         private System.Windows.Forms.Button button9;
