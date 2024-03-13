@@ -27,13 +27,7 @@ namespace TFIKLabi
 
         private string getNewFileName()
         {
-            int count = 0;
-            string fileName = standartFileName + count + ".txt";
-            while (File.Exists(fileName))
-            {
-                fileName = $"{standartFileName}{count}" + ".txt";
-                count++;
-            }
+            string fileName = standartFileName + ".txt";
             return fileName;
 
         }
@@ -41,19 +35,9 @@ namespace TFIKLabi
         private void toolStripMenuItem2_Click(object sender, EventArgs e)    //обработчик создать файл
         {
 
-            //SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            //saveFileDialog.Title = "Save a file";
 
-            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    filePath = saveFileDialog.FileName;
-
-            //    File.WriteAllText(filePath, string.Empty);
-
-            //    OpenFile(filePath);
-            //}
-            filePath = getNewFileName();
+            // Получаем полный путь к будущему файлу
+            filePath = Environment.CurrentDirectory + Path.DirectorySeparatorChar + getNewFileName();
             OpenFile(filePath);
             // toolStripMenuItem3_Click
 
@@ -82,7 +66,7 @@ namespace TFIKLabi
             TabPage tabPage = new TabPage(fileName);
             try
             {
-                tabPage.Tag = filePath; // Сохраняем путь к файлу в Tag вкладки
+                tabPage.Tag = filePath; 
 
                 tabControl1.TabPages.Add(tabPage);
 
@@ -91,6 +75,7 @@ namespace TFIKLabi
                 richTextBox1.Height = 150;
                 //richTextBox.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(richTextBox1);
+
 
                 RichTextBox richTextBox2 = new RichTextBox();
                 richTextBox2.Width = 780; // Установка ширины элемента
@@ -122,7 +107,7 @@ namespace TFIKLabi
 
                 foreach (TabPage tab in tabControl1.TabPages)
                 {
-                    if (tab.Text == Path.GetFileName(filePath))
+                    if (tab.Tag.ToString() == filePath)
                     {
                         MessageBox.Show("Файл уже открыт во вкладке.");
                         return;
@@ -132,6 +117,7 @@ namespace TFIKLabi
                 string fileContent = File.ReadAllText(filePath);
                 TabPage tabPage = new TabPage(Path.GetFileName(filePath));
                 tabControl1.TabPages.Add(tabPage);
+                tabPage.Tag = filePath;
 
                 RichTextBox richTextBox1 = new RichTextBox();
                 richTextBox1.Width = 780; // Установка ширины элемента
@@ -139,6 +125,7 @@ namespace TFIKLabi
                 //richTextBox.Dock = DockStyle.Fill;
                 richTextBox1.Text = fileContent;
                 tabPage.Controls.Add(richTextBox1);
+
 
                 RichTextBox richTextBox2 = new RichTextBox();
                 richTextBox2.Width = 780; // Установка ширины элемента
@@ -170,7 +157,17 @@ namespace TFIKLabi
             if (richTextBox != null && tabPage.Tag != null)
             {
                 string filePath = tabPage.Tag.ToString();
-                return System.IO.File.Exists(filePath);
+                bool fileExist = System.IO.File.Exists(filePath);
+                if (fileExist)
+                {
+                    string fileContent = File.ReadAllText(filePath);
+                    // Если содержимое textbox такое же, как в файле, то он считается сохраненным
+                    return richTextBox.Text == fileContent; // Вернуть должен false FIX
+                }
+                else
+                {
+                    return System.IO.File.Exists(filePath);
+                }
             }
 
             return false;
@@ -203,7 +200,7 @@ namespace TFIKLabi
                 RichTextBox richTextBox = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
                 if (richTextBox != null)
                 {
-                    if (!IsFileSaved(tabControl1.SelectedTab))
+                    if (!System.IO.File.Exists(filePath)) // Возможно поменять на exist
                     {
                         SaveKaK();
                     }
@@ -471,8 +468,8 @@ namespace TFIKLabi
                     DialogResult result = MessageBox.Show("Файл не сохранен. Хотите сохранить перед закрытием?", "Предупреждение", MessageBoxButtons.YesNoCancel);
                     if (result == DialogResult.Yes)
                     {
-                        // Сохранение файла
-                        SaveKaK();
+                        // Сохранение файла. Если файл существует, то сохранить просто
+                        toolStripMenuItem4_Click(sender, e);
                     }
                     else if (result == DialogResult.Cancel)
                     {
@@ -560,6 +557,11 @@ namespace TFIKLabi
         {
             // Вызываем метод обработки события пускToolStripMenuItem_Click для обновления результатов при смене вкладки
             //пускToolStripMenuItem_Click(sender, e);
+            if (tabControl1.SelectedTab != null)
+            {
+                filePath = tabControl1.SelectedTab.Tag.ToString();
+            }
+            //
         }
     }
 }
