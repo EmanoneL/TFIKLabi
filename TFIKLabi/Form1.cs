@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TFIKLabi
@@ -66,7 +67,7 @@ namespace TFIKLabi
             TabPage tabPage = new TabPage(fileName);
             try
             {
-                tabPage.Tag = filePath; 
+                tabPage.Tag = filePath;
 
                 tabControl1.TabPages.Add(tabPage);
 
@@ -293,7 +294,7 @@ namespace TFIKLabi
                 }
             }
 
-            Application.Exit();
+            //Application.Exit();
         }
 
 
@@ -494,12 +495,12 @@ namespace TFIKLabi
         }
         private void SearchFileNames()
         {
+
             if (tabControl1.TabPages.Count == 0)
             {
                 MessageBox.Show("Нет открытых файлов для поиска.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             TabPage activeTab = tabControl1.SelectedTab;
             RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
             if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
@@ -507,43 +508,34 @@ namespace TFIKLabi
                 string text = activeRichTextBox.Text;
                 Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
                 MatchCollection matches = regex.Matches(text);
+                RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+                textOutput.Clear();
 
-                //richTextBox2.Clear();
                 foreach (Match match in matches)
                 {
-                    RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-                    textOutput.AppendText(match.Value + Environment.NewLine);
+                    //RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
 
+                    textOutput.AppendText("Совпадение: " + match.Value + Environment.NewLine);
+
+                    int matchStartIndex = match.Index;
+                    int matchEndIndex = matchStartIndex + match.Length - 1; // Исправлено
+
+                    int lineStartIndex = text.LastIndexOf('\n', matchStartIndex) + 1;
+                    int lineEndIndex = text.IndexOf('\n', matchEndIndex);
+                    if (lineEndIndex == -1)
+                    {
+                        lineEndIndex = text.Length - 1;
+                    }
+
+                    int currentLineNumber = text.Substring(0, matchStartIndex).Count(c => c == '\n') + 1;
+
+                    textOutput.AppendText($"Номер строки: {currentLineNumber}, Начало: {matchStartIndex}, Конец: {matchEndIndex}" + Environment.NewLine);
                 }
             }
             else
             {
                 MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            //if (tabControl1.TabPages.Count == 0)
-            //{
-            //    MessageBox.Show("Нет открытых файлов для поиска.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-
-            //TabPage activeTab = tabControl1.SelectedTab;
-            //RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            //if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
-            //{
-            //    string text = activeRichTextBox.Text;
-            //    Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
-            //    MatchCollection matches = regex.Matches(text);
-
-            //    richTextBox2.Clear();
-            //    foreach (Match match in matches)
-            //    {
-            //        richTextBox2.AppendText(match.Value + Environment.NewLine);
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //}
         }
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {

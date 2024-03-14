@@ -69,6 +69,7 @@ namespace TFIKLabi
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             tabControl1 = new System.Windows.Forms.TabControl();
             button9 = new System.Windows.Forms.Button();
+            постановкаЗадачиToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
@@ -189,10 +190,10 @@ namespace TFIKLabi
             // 
             // постановкаЗадачиToolStripMenuItem
             // 
-            постановкаЗадачиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { грамматикаToolStripMenuItem, классификацияГрамматикиToolStripMenuItem, методАнализаToolStripMenuItem, диагностикаИНейтрализацияОшибокToolStripMenuItem, тестовыйПримерToolStripMenuItem, списокЛитературыToolStripMenuItem, исходныйКодПрограммыToolStripMenuItem });
+            постановкаЗадачиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { постановкаЗадачиToolStripMenuItem1, грамматикаToolStripMenuItem, классификацияГрамматикиToolStripMenuItem, методАнализаToolStripMenuItem, диагностикаИНейтрализацияОшибокToolStripMenuItem, тестовыйПримерToolStripMenuItem, списокЛитературыToolStripMenuItem, исходныйКодПрограммыToolStripMenuItem });
             постановкаЗадачиToolStripMenuItem.Name = "постановкаЗадачиToolStripMenuItem";
-            постановкаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
-            постановкаЗадачиToolStripMenuItem.Text = "Постановка задачи";
+            постановкаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            постановкаЗадачиToolStripMenuItem.Text = "Текст";
             // 
             // грамматикаToolStripMenuItem
             // 
@@ -391,6 +392,12 @@ namespace TFIKLabi
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // постановкаЗадачиToolStripMenuItem1
+            // 
+            постановкаЗадачиToolStripMenuItem1.Name = "постановкаЗадачиToolStripMenuItem1";
+            постановкаЗадачиToolStripMenuItem1.Size = new System.Drawing.Size(363, 26);
+            постановкаЗадачиToolStripMenuItem1.Text = "Постановка задачи";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -456,5 +463,6 @@ namespace TFIKLabi
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem закрытьФайлToolStripMenuItem;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.ToolStripMenuItem постановкаЗадачиToolStripMenuItem1;
     }
 }
