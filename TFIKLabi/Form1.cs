@@ -19,6 +19,8 @@ namespace TFIKLabi
     {
         string filePath;
         string standartFileName = "NewFile";
+        List<RegResult> results = new List<RegResult> { };
+
         public Form1()
         {
             InitializeComponent();
@@ -495,6 +497,7 @@ namespace TFIKLabi
         }
         private void SearchFileNames()
         {
+            results.Clear();
 
             if (tabControl1.TabPages.Count == 0)
             {
@@ -530,6 +533,7 @@ namespace TFIKLabi
                     int currentLineNumber = text.Substring(0, matchStartIndex).Count(c => c == '\n') + 1;
 
                     textOutput.AppendText($"Номер строки: {currentLineNumber}, Начало: {matchStartIndex}, Конец: {matchEndIndex}" + Environment.NewLine);
+                    results.Add(new RegResult(match.Value, match.Index, currentLineNumber));
                 }
             }
             else
