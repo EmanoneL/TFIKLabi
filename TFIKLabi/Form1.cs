@@ -507,14 +507,14 @@ namespace TFIKLabi
             {
                 fileName += text[0];
                 textOutput.AppendText($"Состояние: ");
-                currentState = "q1"; // Обновляем состояние до q1 при добавлении первого символа в имя файла
+                currentState = "q2"; // Обновляем состояние до q1 при добавлении первого символа в имя файла
             }
 
             Dictionary<string, Dictionary<char, string>> states = new Dictionary<string, Dictionary<char, string>>()
             {
             { "q0", new Dictionary<char, string>() { { '\b', "q1" } } },
-            { "q1", new Dictionary<char, string>() { { '\b', "q2" } } },
-            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } },
+            { "q1", new Dictionary<char, string>() { { ' ', "q2" } } },
+            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" } } },
             { "q3", new Dictionary<char, string>() { { 'd', "q4" }, { 't', "q7" }, { 'p', "q9" } } },
             { "q4", new Dictionary<char, string>() { { 'o', "q5" } } },
             { "q5", new Dictionary<char, string>() { { 'c', "q6" } } },
@@ -542,6 +542,14 @@ namespace TFIKLabi
                     if (states[currentState].ContainsKey(c))
                     {
                         currentState = states[currentState][c];
+                    }
+
+                    if(currentState == "q1" || currentState == "q2")
+                    {
+                        if (Char.IsLetter(c) || c == '_')
+                        {
+                            currentState = "q2";
+                        }
                     }
                     else
                     {
