@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TFIKLabi
 {
@@ -495,6 +489,74 @@ namespace TFIKLabi
                 }
             }
         }
+
+        private void Falss()
+        {
+            //results.Clear();
+            TabPage activeTab = tabControl1.SelectedTab;
+            RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            string text = activeRichTextBox.Text;
+
+            RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            string currentState = "q0";
+            textOutput.AppendText($"Состояние: {currentState.ToString()}");
+            string fileName = "";
+            
+
+            if (!new char[] { '#', '/', ':' }.Contains(text[0]))
+            {
+                fileName += text[0];
+                textOutput.AppendText($"Состояние: ");
+                currentState = "q1"; // Обновляем состояние до q1 при добавлении первого символа в имя файла
+            }
+
+            Dictionary<string, Dictionary<char, string>> states = new Dictionary<string, Dictionary<char, string>>()
+            {
+            { "q0", new Dictionary<char, string>() { { '\b', "q1" } } },
+            { "q1", new Dictionary<char, string>() { { '\b', "q2" } } },
+            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } },
+            { "q3", new Dictionary<char, string>() { { 'd', "q4" }, { 't', "q7" }, { 'p', "q9" } } },
+            { "q4", new Dictionary<char, string>() { { 'o', "q5" } } },
+            { "q5", new Dictionary<char, string>() { { 'c', "q6" } } },
+            { "q6", new Dictionary<char, string>() { { ' ', "q12" }, { '\t', "q12" }, { '\n', "q12" }, { '\r', "q12" } } },
+            { "q7", new Dictionary<char, string>() { { 'x', "q8" } } },
+            { "q8", new Dictionary<char, string>() { { 't', "q11" } } },
+            { "q9", new Dictionary<char, string>() { { 'd', "q10" } } },
+            { "q10", new Dictionary<char, string>() { { 'f', "q11" } } },
+            { "q11", new Dictionary<char, string>() { { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } }
+            };
+           
+           
+            if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
+            {
+                
+                foreach (char c in text.Skip(1))
+                {
+                    if (new char[] { '#', '/', ',', ':' }.Contains(c))
+                    {
+                        fileName = "";
+                        currentState = "q0";
+                        
+                        continue;
+                    }
+                    if (states[currentState].ContainsKey(c))
+                    {
+                        currentState = states[currentState][c];
+                    }
+                    else
+                    {
+                        // Логика для обработки непредусмотренных символов
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }  
+        }
+
+
+
         private void SearchFileNames()
         {
             results.Clear();
@@ -509,11 +571,27 @@ namespace TFIKLabi
             if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
             {
                 string text = activeRichTextBox.Text;
-                Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+                //Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+                //Regex regex = new Regex(@"\b\w+(\.\w+)+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+                Regex regex = new Regex(@"\b\w+(\.\w+)*\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
                 MatchCollection matches = regex.Matches(text);
                 RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
                 textOutput.Clear();
 
+                //foreach (Match match in matches)
+                //{
+                //    int state = 0;
+                //    string currentMatch = "";
+                //    foreach (char c in match.Value)
+                //    {
+                //        state++;
+                //        currentMatch += c;
+                //        textOutput.AppendText($"Состояние{state}: {currentMatch}" + Environment.NewLine);
+                //    }
+                //    int matchStartIndex = match.Index;
+                //    int currentLineNumber = text.Substring(0, matchStartIndex).Count(c => c == '\n') + 1;
+                //    results.Add(new RegResult(match.Value, match.Index, 0)); // Замените 0 на текущий номер строки
+                //}
                 foreach (Match match in matches)
                 {
                     //RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
@@ -544,8 +622,8 @@ namespace TFIKLabi
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            SearchFileNames();
-
+             //SearchFileNames();
+            Falss();
         }
 
 
