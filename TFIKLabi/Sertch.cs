@@ -9,6 +9,13 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TFIKLabi
 {
     //asgsdjhgdsjh.txt shjdfj.doc )))aekhwje.dtg////
+    /*
+     asgsdjhgdsjh.txt shjdfj.doc 
+)))aekhwje.dtg.txt////
+file.txt.txt
+gg.txt.tx
+         dfb.doc.docx 
+     */
 
     /// rfr.txt rere.tx rere.doc
     internal class Sertch
@@ -43,7 +50,7 @@ namespace TFIKLabi
                 int startIndex = 0;
                 string filenameContent = "(Waiting)\n";
 
-                results.AddResult(' ', State.Waiting);
+                //results.AddResult(' ', State.Waiting);
 
                 string filename = string.Empty;
                 while (stateMachine.State != State.End)
@@ -56,6 +63,7 @@ namespace TFIKLabi
                         
                             filename += stateMachine.CurrentChar;
                             results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+
                             break;
 
                         case State.StartReadEnd:
@@ -77,19 +85,32 @@ namespace TFIKLabi
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.NextChar, State.Reading.ToString());
+                                startIndex = stateMachine.CurrentCharPos + 1;
+                                stateMachine.CurrentCharPos += 1;
                             }
                             break;
 
                         case State.FinishReadEnd:
-                            results.AddResult(stateMachine.NextChar, State.FinishReadEnd.ToString() + "-True");
-                            //stateMachine.State = State.Waiting;
+                            if (stateMachine.NextChar == '.')
+                            {
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                filename += stateMachine.CurrentChar;
+                            }
+                            else
+                            {
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                stateMachine.Next();
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State + "-True");
+                                filename += stateMachine.CurrentChar;
+                                //stateMachine.State = State.Waiting;
 
-                            //filenameContent += " - (Waiting)\n";
-                            RegResult reg = new RegResult(filename,  filenameContent,  startIndex, lineNumber);
-                            FileNames.Add(reg);
-                            startIndex = stateMachine.CurrentCharPos;
-                            //filenameContent = string.Empty;
+                                //filenameContent += " - (Waiting)\n";
+                                RegResult reg = new RegResult(filename, filenameContent, startIndex, lineNumber);
+                                FileNames.Add(reg);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
+                                //filenameContent = string.Empty;
+                            }
                             break;
 
                         case State.Waiting:
@@ -100,91 +121,106 @@ namespace TFIKLabi
                             break;
 
                         case State.Pos_p:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'd')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 'd')
                             {
-                                results.AddResult(stateMachine.NextChar, State.Pos_d_pdf);
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //filenameContent += line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                filename += line[stateMachine.CurrentCharPos];
 
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
 
                         case State.Pos_d_pdf:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'f')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 'f')
                             {
-                                results.AddResult(stateMachine.NextChar, State.FinishReadEnd);
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
 
                         case State.Pos_t1:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'x')
+                            stateMachine.Next();
+                            results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                            if (line[stateMachine.CurrentCharPos] == 'x')
                             {
-                                results.AddResult(stateMachine.NextChar, State.Pos_x_txt);
-                                filename += line[stateMachine.CurrentCharPos + 1];
+
+                                //results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                //results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
                             
                         case State.Pos_x_txt:
-                            if (line[stateMachine.CurrentCharPos + 1] == 't')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 't' )
                             {
-                                results.AddResult(stateMachine.NextChar, State.FinishReadEnd);
-                                //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                
+                                filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
 
                         case State.Pos_d_docx:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'o')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 'o')
                             {
-                                results.AddResult(stateMachine.NextChar, State.Pos_o);
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
 
-//                                filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
+                                filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;                                
                             }
                             break;
 
                         case State.Pos_o:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'c')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 'c')
                             {
-                                results.AddResult(stateMachine.NextChar, State.Pos_cx);
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.NextChar, State.Waiting.ToString() + " - False");
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
 
                         case State.Pos_cx:
-                            if (line[stateMachine.CurrentCharPos + 1] == 'x')
+                            stateMachine.Next();
+                            if (line[stateMachine.CurrentCharPos] == 'x')
                             {
-                                results.AddResult(stateMachine.NextChar, State.FinishReadEnd);
+                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos + 1];
+                                filename += line[stateMachine.CurrentCharPos];
 
-                            }else { results.AddResult(stateMachine.NextChar, State.Waiting); }
+                            }else { results.AddResult(stateMachine.CurrentChar, stateMachine.State); }
                             break;
                     }
 

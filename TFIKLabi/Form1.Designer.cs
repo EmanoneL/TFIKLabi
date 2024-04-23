@@ -47,6 +47,7 @@ namespace TFIKLabi
             удалитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             выделитьВсеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             постановкаЗадачиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            постановкаЗадачиToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             грамматикаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             классификацияГрамматикиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             методАнализаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +70,6 @@ namespace TFIKLabi
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             tabControl1 = new System.Windows.Forms.TabControl();
             button9 = new System.Windows.Forms.Button();
-            постановкаЗадачиToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
@@ -194,6 +194,12 @@ namespace TFIKLabi
             постановкаЗадачиToolStripMenuItem.Name = "постановкаЗадачиToolStripMenuItem";
             постановкаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             постановкаЗадачиToolStripMenuItem.Text = "Текст";
+            // 
+            // постановкаЗадачиToolStripMenuItem1
+            // 
+            постановкаЗадачиToolStripMenuItem1.Name = "постановкаЗадачиToolStripMenuItem1";
+            постановкаЗадачиToolStripMenuItem1.Size = new System.Drawing.Size(363, 26);
+            постановкаЗадачиToolStripMenuItem1.Text = "Постановка задачи";
             // 
             // грамматикаToolStripMenuItem
             // 
@@ -365,7 +371,7 @@ namespace TFIKLabi
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            statusStrip1.Location = new System.Drawing.Point(0, 428);
+            statusStrip1.Location = new System.Drawing.Point(0, 634);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new System.Drawing.Size(800, 22);
             statusStrip1.TabIndex = 12;
@@ -376,7 +382,7 @@ namespace TFIKLabi
             tabControl1.Location = new System.Drawing.Point(12, 80);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(776, 345);
+            tabControl1.Size = new System.Drawing.Size(776, 564);
             tabControl1.TabIndex = 13;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
@@ -392,17 +398,11 @@ namespace TFIKLabi
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
-            // постановкаЗадачиToolStripMenuItem1
-            // 
-            постановкаЗадачиToolStripMenuItem1.Name = "постановкаЗадачиToolStripMenuItem1";
-            постановкаЗадачиToolStripMenuItem1.Size = new System.Drawing.Size(363, 26);
-            постановкаЗадачиToolStripMenuItem1.Text = "Постановка задачи";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(800, 450);
+            ClientSize = new System.Drawing.Size(800, 656);
             Controls.Add(button9);
             Controls.Add(tabControl1);
             Controls.Add(statusStrip1);

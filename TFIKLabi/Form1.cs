@@ -79,7 +79,7 @@ namespace TFIKLabi
 
                 RichTextBox richTextBox2 = new RichTextBox();
                 richTextBox2.Width = 780; // Установка ширины элемента
-                richTextBox2.Height = 130;
+                richTextBox2.Height = 300;
                 richTextBox2.Location = new Point(0, richTextBox1.Height + 30);
                 //richTextBox.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(richTextBox2);
@@ -129,7 +129,7 @@ namespace TFIKLabi
 
                 RichTextBox richTextBox2 = new RichTextBox();
                 richTextBox2.Width = 780; // Установка ширины элемента
-                richTextBox2.Height = 130;
+                richTextBox2.Height = 300;
                 richTextBox2.Location = new Point(0, richTextBox1.Height + 30);
                 //richTextBox.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(richTextBox2);
