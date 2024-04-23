@@ -14,6 +14,9 @@ namespace TFIKLabi
         string filePath;
         string standartFileName = "NewFile";
         List<RegResult> results = new List<RegResult> { };
+        Sertch sertch;
+
+        
 
         public Form1()
         {
@@ -495,26 +498,19 @@ namespace TFIKLabi
             //results.Clear();
             TabPage activeTab = tabControl1.SelectedTab;
             RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+
             string text = activeRichTextBox.Text;
 
             RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
             string currentState = "q0";
-            textOutput.AppendText($"Состояние: {currentState.ToString()}");
+            textOutput.AppendText($"Состояние: {currentState}");
             string fileName = "";
             
-
-            if (!new char[] { '#', '/', ':' }.Contains(text[0]))
-            {
-                fileName += text[0];
-                textOutput.AppendText($"Состояние: ");
-                currentState = "q1"; // Обновляем состояние до q1 при добавлении первого символа в имя файла
-            }
-
             Dictionary<string, Dictionary<char, string>> states = new Dictionary<string, Dictionary<char, string>>()
             {
             { "q0", new Dictionary<char, string>() { { '\b', "q1" } } },
-            { "q1", new Dictionary<char, string>() { { '\b', "q2" } } },
-            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } },
+            { "q1", new Dictionary<char, string>() { { ' ', "q2" } } },
+            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" }} },
             { "q3", new Dictionary<char, string>() { { 'd', "q4" }, { 't', "q7" }, { 'p', "q9" } } },
             { "q4", new Dictionary<char, string>() { { 'o', "q5" } } },
             { "q5", new Dictionary<char, string>() { { 'c', "q6" } } },
@@ -525,18 +521,22 @@ namespace TFIKLabi
             { "q10", new Dictionary<char, string>() { { 'f', "q11" } } },
             { "q11", new Dictionary<char, string>() { { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } }
             };
-           
-           
+
+            if (!new char[] { '#', '/', ':' }.Contains(text[0]))
+            {
+                fileName += text[0];
+                currentState = "q2"; // Обновляем состояние до q2 при добавлении первого символа в имя файла
+                textOutput.AppendText($"Состояние: {currentState}");
+            }
+
             if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
             {
-                
                 foreach (char c in text.Skip(1))
                 {
                     if (new char[] { '#', '/', ',', ':' }.Contains(c))
                     {
                         fileName = "";
                         currentState = "q0";
-                        
                         continue;
                     }
                     if (states[currentState].ContainsKey(c))
@@ -557,7 +557,7 @@ namespace TFIKLabi
 
 
 
-        private void SearchFileNames()
+        /*private void SearchFileNames()
         {
             results.Clear();
 
@@ -573,7 +573,7 @@ namespace TFIKLabi
                 string text = activeRichTextBox.Text;
                 //Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
                 //Regex regex = new Regex(@"\b\w+(\.\w+)+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
-                Regex regex = new Regex(@"\b\w+(\.\w+)*\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
+                Regex regex = new Regex(@"\b\w+(\.\w+)*\.(doc|docx|txt|pdf)", RegexOptions.IgnoreCase);
                 MatchCollection matches = regex.Matches(text);
                 RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
                 textOutput.Clear();
@@ -618,12 +618,24 @@ namespace TFIKLabi
             {
                 MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
+        }*/
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var RichTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var RichTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
 
-             //SearchFileNames();
-            Falss();
+            try
+            {
+                sertch = new Sertch(RichTextBox1.Text);
+                RichTextBox2.Text = sertch.GetResult();
+            }
+            catch (Exception ex)
+            {
+                //RichTextBox2.Clear();
+                MessageBox.Show($"Ошибка записи файлов! - {ex.Message}", "Ошибка!", MessageBoxButtons.OK);
+            }
+            //SearchFileNames();
+            //Falss();
         }
 
 

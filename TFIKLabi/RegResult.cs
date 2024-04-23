@@ -8,13 +8,16 @@ namespace TFIKLabi
 {
     class RegResult
     {
-        string result;
-        int start;
-        int stringNum;
 
-        public RegResult(string res, int st, int num)
+        public string result { get; set; }
+        public string resultcontent { get; set; }
+        public int start { get; set; }
+        public int stringNum { get; set; }
+
+        public RegResult(string res, string rezcontent, int st, int num)
         {
             result = res;
+            resultcontent = rezcontent;
             start = st;
             stringNum = num;
         }
