@@ -49,26 +49,26 @@ namespace TFIKLabi
                 return;
             }
 
-            if ((State == State.Pos_d_pdf) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
-            {
-                State = State.FinishReadEnd;
-                return;
-            }
-            if ((State == State.Pos_x_txt) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
-            {
-                State = State.FinishReadEnd;
-                return;
-            }
-            if ((State == State.Pos_cx) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
-            {
-                State = State.FinishReadEnd;
-                return;
-            }
-            if ((State == State.Pos_o) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
-            {
-                State = State.FinishReadEnd;
-                return;
-            }
+            //if ((State == State.Pos_d_pdf) && "/ & # ,   [ ] { } ( )".Contains(CurrentChar.ToString()))
+            //{
+            //    State = State.FinishReadEnd;
+            //    return;
+            //}
+            //if ((State == State.Pos_x_txt) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
+            //{
+            //    State = State.FinishReadEnd;
+            //    return;
+            //}
+            //if ((State == State.Pos_cx) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
+            //{
+            //    State = State.FinishReadEnd;
+            //    return;
+            //}
+            //if ((State == State.Pos_o) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
+            //{
+            //    State = State.FinishReadEnd;
+            //    return;
+            //}
 
             switch (CurrentChar)
             {
@@ -85,6 +85,7 @@ namespace TFIKLabi
                 case '}': State = State.Waiting; break;
                 case '[': State = State.Waiting; break;
                 case ']': State = State.Waiting; break;
+
                 case 'p':
                     if (State == State.StartReadEnd) { State = State.Pos_p; break; } 
                     else { State = State.Reading; break; }
@@ -111,7 +112,7 @@ namespace TFIKLabi
 
                 case 'x':
                     if (State == State.Pos_t1) { State = State.Pos_x_txt; break; }
-                    else if (State == State.Pos_cx) { State = State.FinishReadEnd; break; }
+                    else if (State == State.FinishReadEnd) { State = State.FinishReadEnd; break; }
                     //else if (State == State.Pos_cx) { State = State.Pos_x_docx; break; } 
                     else { State = State.Reading; break; }
                 

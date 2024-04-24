@@ -92,7 +92,7 @@ gg.txt.tx
                             break;
 
                         case State.FinishReadEnd:
-                            if (stateMachine.NextChar == '.')
+                            if (stateMachine.NextChar == '.' || stateMachine.NextChar == 'x')
                             {
                                 results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 filename += stateMachine.CurrentChar;
@@ -214,14 +214,16 @@ gg.txt.tx
                             break;
 
                         case State.Pos_cx:
-                            stateMachine.Next();
-                            if (line[stateMachine.CurrentCharPos] == 'x')
-                            {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
-                                //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
-                                filename += line[stateMachine.CurrentCharPos];
 
-                            }else { results.AddResult(stateMachine.CurrentChar, stateMachine.State); }
+                            results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+
+                            if (line[stateMachine.CurrentCharPos] == 'c')
+                            {
+
+                                
+
+                            }
+                            
                             break;
                     }
 
