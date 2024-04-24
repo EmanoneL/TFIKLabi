@@ -122,16 +122,17 @@ gg.txt.tx
 
                         case State.Pos_p:
                             stateMachine.Next();
+                            results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                             if (line[stateMachine.CurrentCharPos] == 'd')
                             {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //filenameContent += line[stateMachine.CurrentCharPos + 1];
                                 filename += line[stateMachine.CurrentCharPos];
 
                             }
                             else
                             {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //startIndex = stateMachine.CurrentCharPos + 1;
                             }
                             break;
@@ -183,16 +184,16 @@ gg.txt.tx
 
                         case State.Pos_d_docx:
                             stateMachine.Next();
+                            results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                             if (line[stateMachine.CurrentCharPos] == 'o')
                             {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
 
                                 //filenameContent += " - " + line[stateMachine.CurrentCharPos + 1];
                                 filename += line[stateMachine.CurrentCharPos];
                             }
                             else
                             {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                                //results.AddResult(stateMachine.CurrentChar, stateMachine.State);
                                 //startIndex = stateMachine.CurrentCharPos + 1;                                
                             }
                             break;
