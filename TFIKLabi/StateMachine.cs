@@ -59,11 +59,11 @@ namespace TFIKLabi
             //    State = State.FinishReadEnd;
             //    return;
             //}
-            //if ((State == State.Pos_cx) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
-            //{
-            //    State = State.FinishReadEnd;
-            //    return;
-            //}
+            ////if ((State == State.Pos_cx) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
+            ////{
+            ////    State = State.FinishReadEnd;
+            ////    return;
+            ////}
             //if ((State == State.Pos_o) && "/ & # ,   [ ] { } ( )".Contains(NextChar.ToString()))
             //{
             //    State = State.FinishReadEnd;
@@ -112,7 +112,7 @@ namespace TFIKLabi
 
                 case 'x':
                     if (State == State.Pos_t1) { State = State.Pos_x_txt; break; }
-                    else if (State == State.FinishReadEnd) { State = State.FinishReadEnd; break; }
+                    /*else if (State == State.FinishReadEnd) { State = State.FinishReadEnd; break; }*/
                     //else if (State == State.Pos_cx) { State = State.Pos_x_docx; break; } 
                     else { State = State.Reading; break; }
                 

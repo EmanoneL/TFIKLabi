@@ -92,25 +92,40 @@ gg.txt.tx
                             break;
 
                         case State.FinishReadEnd:
-                            if (stateMachine.NextChar == '.' || stateMachine.NextChar == 'x')
-                            {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
-                                filename += stateMachine.CurrentChar;
-                            }
-                            else
-                            {
-                                results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                            results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                            filename += stateMachine.CurrentChar;
+
+                            if ("/ & # ,   [ ] { } ( )".Contains(stateMachine.NextChar.ToString())){
                                 stateMachine.Next();
                                 results.AddResult(stateMachine.CurrentChar, stateMachine.State + "-True");
                                 filename += stateMachine.CurrentChar;
-                                //stateMachine.State = State.Waiting;
-
-                                //filenameContent += " - (Waiting)\n";
                                 RegResult reg = new RegResult(filename, filenameContent, startIndex, lineNumber);
                                 FileNames.Add(reg);
-                                //startIndex = stateMachine.CurrentCharPos + 1;
-                                //filenameContent = string.Empty;
                             }
+
+
+                            //if (stateMachine.NextChar == '.' /*|| stateMachine.NextChar == 'x'*/)
+                            //{
+                            //    results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                            //    filename += stateMachine.CurrentChar;
+                            //}
+                            ////if ("/ & # ,   [ ] { } ( )".Contains(stateMachine.Next.ToString()){
+
+                            ////}
+                            //else
+                            //{
+                            //    results.AddResult(stateMachine.CurrentChar, stateMachine.State);
+                            //    stateMachine.Next();
+                            //    results.AddResult(stateMachine.CurrentChar, stateMachine.State + "-True");
+                            //    filename += stateMachine.CurrentChar;
+                            //    //stateMachine.State = State.Waiting;
+
+                            //    //filenameContent += " - (Waiting)\n";
+                            //    RegResult reg = new RegResult(filename, filenameContent, startIndex, lineNumber);
+                            //    FileNames.Add(reg);
+                            //    //startIndex = stateMachine.CurrentCharPos + 1;
+                            //    //filenameContent = string.Empty;
+                            //}
                             break;
 
                         case State.Waiting:
