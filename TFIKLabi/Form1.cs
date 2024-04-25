@@ -16,7 +16,7 @@ namespace TFIKLabi
         List<RegResult> results = new List<RegResult> { };
         Sertch sertch;
 
-        
+
 
         public Form1()
         {
@@ -493,132 +493,7 @@ namespace TFIKLabi
             }
         }
 
-        private void Falss()
-        {
-            //results.Clear();
-            TabPage activeTab = tabControl1.SelectedTab;
-            RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-
-            string text = activeRichTextBox.Text;
-
-            RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-            string currentState = "q0";
-            textOutput.AppendText($"Состояние: {currentState}");
-            string fileName = "";
-            
-            Dictionary<string, Dictionary<char, string>> states = new Dictionary<string, Dictionary<char, string>>()
-            {
-            { "q0", new Dictionary<char, string>() { { '\b', "q1" } } },
-            { "q1", new Dictionary<char, string>() { { ' ', "q2" } } },
-            { "q2", new Dictionary<char, string>() { { '.', "q3" }, { ' ', "q2" }} },
-            { "q3", new Dictionary<char, string>() { { 'd', "q4" }, { 't', "q7" }, { 'p', "q9" } } },
-            { "q4", new Dictionary<char, string>() { { 'o', "q5" } } },
-            { "q5", new Dictionary<char, string>() { { 'c', "q6" } } },
-            { "q6", new Dictionary<char, string>() { { ' ', "q12" }, { '\t', "q12" }, { '\n', "q12" }, { '\r', "q12" } } },
-            { "q7", new Dictionary<char, string>() { { 'x', "q8" } } },
-            { "q8", new Dictionary<char, string>() { { 't', "q11" } } },
-            { "q9", new Dictionary<char, string>() { { 'd', "q10" } } },
-            { "q10", new Dictionary<char, string>() { { 'f', "q11" } } },
-            { "q11", new Dictionary<char, string>() { { ' ', "q2" }, { '\t', "q2" }, { '\n', "q2" }, { '\r', "q2" } } }
-            };
-
-            if (!new char[] { '#', '/', ':' }.Contains(text[0]))
-            {
-                fileName += text[0];
-                currentState = "q2"; // Обновляем состояние до q2 при добавлении первого символа в имя файла
-                textOutput.AppendText($"Состояние: {currentState}");
-            }
-
-            if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
-            {
-                foreach (char c in text.Skip(1))
-                {
-                    if (new char[] { '#', '/', ',', ':' }.Contains(c))
-                    {
-                        fileName = "";
-                        currentState = "q0";
-                        continue;
-                    }
-                    if (states[currentState].ContainsKey(c))
-                    {
-                        currentState = states[currentState][c];
-                    }
-                    else
-                    {
-                        // Логика для обработки непредусмотренных символов
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }  
-        }
-
-
-
-        /*private void SearchFileNames()
-        {
-            results.Clear();
-
-            if (tabControl1.TabPages.Count == 0)
-            {
-                MessageBox.Show("Нет открытых файлов для поиска.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            TabPage activeTab = tabControl1.SelectedTab;
-            RichTextBox activeRichTextBox = activeTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            if (activeRichTextBox != null && !string.IsNullOrEmpty(activeRichTextBox.Text))
-            {
-                string text = activeRichTextBox.Text;
-                //Regex regex = new Regex(@"\b\w+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
-                //Regex regex = new Regex(@"\b\w+(\.\w+)+\.(doc|docx|txt|pdf)\b", RegexOptions.IgnoreCase);
-                Regex regex = new Regex(@"\b\w+(\.\w+)*\.(doc|docx|txt|pdf)", RegexOptions.IgnoreCase);
-                MatchCollection matches = regex.Matches(text);
-                RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-                textOutput.Clear();
-
-                //foreach (Match match in matches)
-                //{
-                //    int state = 0;
-                //    string currentMatch = "";
-                //    foreach (char c in match.Value)
-                //    {
-                //        state++;
-                //        currentMatch += c;
-                //        textOutput.AppendText($"Состояние{state}: {currentMatch}" + Environment.NewLine);
-                //    }
-                //    int matchStartIndex = match.Index;
-                //    int currentLineNumber = text.Substring(0, matchStartIndex).Count(c => c == '\n') + 1;
-                //    results.Add(new RegResult(match.Value, match.Index, 0)); // Замените 0 на текущий номер строки
-                //}
-                foreach (Match match in matches)
-                {
-                    //RichTextBox textOutput = activeTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-
-                    textOutput.AppendText("Совпадение: " + match.Value + Environment.NewLine);
-
-                    int matchStartIndex = match.Index;
-                    int matchEndIndex = matchStartIndex + match.Length - 1; // Исправлено
-
-                    int lineStartIndex = text.LastIndexOf('\n', matchStartIndex) + 1;
-                    int lineEndIndex = text.IndexOf('\n', matchEndIndex);
-                    if (lineEndIndex == -1)
-                    {
-                        lineEndIndex = text.Length - 1;
-                    }
-
-                    int currentLineNumber = text.Substring(0, matchStartIndex).Count(c => c == '\n') + 1;
-
-                    textOutput.AppendText($"Номер строки: {currentLineNumber}, Начало: {matchStartIndex}, Конец: {matchEndIndex}" + Environment.NewLine);
-                    results.Add(new RegResult(match.Value, match.Index, currentLineNumber));
-                }
-            }
-            else
-            {
-                MessageBox.Show("Открытый файл пуст или не содержит текста.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }*/
+        
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var RichTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
@@ -648,6 +523,27 @@ namespace TFIKLabi
                 filePath = tabControl1.SelectedTab.Tag.ToString();
             }
             //
+        }
+
+        private void постановкаЗадачиToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            string filePath = @"task.html";
+
+            try
+            {
+                Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    Process.Start("cmd", $"/c start {filePath}");
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
+                }
+            }
         }
     }
 }

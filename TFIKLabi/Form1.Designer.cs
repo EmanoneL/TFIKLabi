@@ -200,6 +200,7 @@ namespace TFIKLabi
             постановкаЗадачиToolStripMenuItem1.Name = "постановкаЗадачиToolStripMenuItem1";
             постановкаЗадачиToolStripMenuItem1.Size = new System.Drawing.Size(363, 26);
             постановкаЗадачиToolStripMenuItem1.Text = "Постановка задачи";
+            постановкаЗадачиToolStripMenuItem1.Click += постановкаЗадачиToolStripMenuItem1_Click;
             // 
             // грамматикаToolStripMenuItem
             // 
