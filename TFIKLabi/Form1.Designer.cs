@@ -70,6 +70,7 @@ namespace TFIKLabi
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             tabControl1 = new System.Windows.Forms.TabControl();
             button9 = new System.Windows.Forms.Button();
+            ликсическийАнализаторToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
@@ -190,7 +191,7 @@ namespace TFIKLabi
             // 
             // постановкаЗадачиToolStripMenuItem
             // 
-            постановкаЗадачиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { постановкаЗадачиToolStripMenuItem1, грамматикаToolStripMenuItem, классификацияГрамматикиToolStripMenuItem, методАнализаToolStripMenuItem, диагностикаИНейтрализацияОшибокToolStripMenuItem, тестовыйПримерToolStripMenuItem, списокЛитературыToolStripMenuItem, исходныйКодПрограммыToolStripMenuItem });
+            постановкаЗадачиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { постановкаЗадачиToolStripMenuItem1, грамматикаToolStripMenuItem, классификацияГрамматикиToolStripMenuItem, методАнализаToolStripMenuItem, диагностикаИНейтрализацияОшибокToolStripMenuItem, тестовыйПримерToolStripMenuItem, списокЛитературыToolStripMenuItem, исходныйКодПрограммыToolStripMenuItem, ликсическийАнализаторToolStripMenuItem });
             постановкаЗадачиToolStripMenuItem.Name = "постановкаЗадачиToolStripMenuItem";
             постановкаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
             постановкаЗадачиToolStripMenuItem.Text = "Текст";
@@ -399,6 +400,13 @@ namespace TFIKLabi
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // ликсическийАнализаторToolStripMenuItem
+            // 
+            ликсическийАнализаторToolStripMenuItem.Name = "ликсическийАнализаторToolStripMenuItem";
+            ликсическийАнализаторToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
+            ликсическийАнализаторToolStripMenuItem.Text = "Лексический анализатор";
+            ликсическийАнализаторToolStripMenuItem.Click += ликсическийАнализаторToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -465,5 +473,6 @@ namespace TFIKLabi
         private System.Windows.Forms.ToolStripMenuItem закрытьФайлToolStripMenuItem;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.ToolStripMenuItem постановкаЗадачиToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ликсическийАнализаторToolStripMenuItem;
     }
 }

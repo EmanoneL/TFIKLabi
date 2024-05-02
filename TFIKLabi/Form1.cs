@@ -14,6 +14,7 @@ namespace TFIKLabi
         string filePath;
         string standartFileName = "NewFile";
         List<RegResult> results = new List<RegResult> { };
+        List<Leksem> leks = new List<Leksem>();
         Sertch sertch;
 
 
@@ -493,7 +494,7 @@ namespace TFIKLabi
             }
         }
 
-        
+
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var RichTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
@@ -545,6 +546,135 @@ namespace TFIKLabi
                 }
             }
         }
+
+        private void ликсическийАнализаторToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2= tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            
+            richTextBox2.Clear();
+            richTextBox2.Enabled = true;
+            string[] type = new string[4] { "Число", "Скобка", "Знак", "Идентификатор" };
+            List<char> skobka = new List<char>() { ')', '(', '{', '}', '[', ']', '<', '>', '|' };
+            List<char> znak = new List<char>() { '!', ',', '.', ':', ';', '?', '-', '_', '+', '=', '*', '%', '~', '/', '\\', '&' };
+            bool flag = false; // для обозначения была ли уже точка или запятая в строке число.
+            int lineIndex = 0;
+            int startPositionInStr = 0;
+            int startPositionOfWord = 0;
+            int endPositionOfWord = 0;
+
+            string identif = "";
+            string chislo = "";
+            for (int i = 0; i < richTextBox1.TextLength; i++)
+            {
+                //Продолжение записи числа
+                if (chislo.Length > 0)
+                {
+                    if ((Char.IsDigit(richTextBox1.Text[i]) || richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".") && i != richTextBox1.TextLength - 1)
+                    {
+                        if (richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".")
+                        {
+                            if (flag == false)
+                            {
+                                chislo += richTextBox1.Text[i].ToString();
+                                flag = true;
+                            }
+                            else
+                            {
+                                endPositionOfWord = startPositionOfWord + chislo.Length;
+                                richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                                richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
+                                Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                                leks.Add(a);
+                                chislo = "";
+                                flag = false;
+                            }
+                        }
+                        else
+                            chislo += richTextBox1.Text[i].ToString();
+                    }
+                    else
+                    {
+                        if (i == richTextBox1.TextLength - 1)
+                        {
+                            chislo += richTextBox1.Text[i].ToString();
+                        }
+                        if (chislo[chislo.Length - 1] == '.' || chislo[chislo.Length - 1] == ',')
+                        {
+                            chislo.Remove(chislo.Length);
+                        }
+                        endPositionOfWord = startPositionOfWord + chislo.Length;
+                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                        richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
+                        Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                        leks.Add(a);
+                        chislo = "";
+                        flag = false;
+                    }
+                }
+                //Продолжение записи идентификатора
+                else if (identif.Length > 0)
+                {
+                    if ((Char.IsDigit(richTextBox1.Text[i]) || Char.IsLetter(richTextBox1.Text[i])) && i != richTextBox1.TextLength - 1)
+                    {
+                        identif += richTextBox1.Text[i].ToString();
+                    }
+                    else
+                    {
+                        if (i == richTextBox1.TextLength - 1)
+                        {
+                            identif += richTextBox1.Text[i].ToString();
+                        }
+                        endPositionOfWord = startPositionOfWord + identif.Length;
+                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                        richTextBox2.Text += " Тип: " + type[3] + ", Лексема: " + identif + "\n";
+                        Leksem a = new Leksem(type[3], identif, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                        leks.Add(a);
+                        identif = "";
+                    }
+                }
+                //Начало числа
+                else if (Char.IsDigit(richTextBox1.Text[i]))
+                {
+                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                    startPositionOfWord = i - startPositionInStr;
+                    chislo += richTextBox1.Text[i].ToString();
+                }
+                //Начало индентификатора
+                else if (Char.IsLetter(richTextBox1.Text[i]))
+                {
+                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                    startPositionOfWord = i - startPositionInStr;
+                    identif += richTextBox1.Text[i].ToString();
+                }
+                else if (skobka.Contains(richTextBox1.Text[i]))
+                {
+                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                    startPositionOfWord = i - startPositionInStr;
+                    endPositionOfWord = startPositionOfWord;
+                    richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
+                    richTextBox2.Text += " Тип: " + type[1] + ", Лексема: " + richTextBox1.Text[i] + "\n";
+                    Leksem a = new Leksem(type[1], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
+                    leks.Add(a);
+                }
+                else if (znak.Contains(richTextBox1.Text[i]))
+                {
+                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                    startPositionOfWord = i - startPositionInStr;
+                    endPositionOfWord = startPositionOfWord;
+                    richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
+                    richTextBox2.Text += " Тип: " + type[2] + ", Лексема: " + richTextBox1.Text[i] + "\n";
+                    Leksem a = new Leksem(type[2], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
+                    leks.Add(a);
+                }
+            }
+        
+
     }
+}
 }
 
