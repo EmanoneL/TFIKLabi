@@ -547,7 +547,7 @@ namespace TFIKLabi
             }
         }
 
-        private void ликсическийАнализаторToolStripMenuItem_Click(object sender, EventArgs e)
+        private void лексическийАнализаторToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
             var richTextBox2= tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();

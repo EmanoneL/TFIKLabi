@@ -405,7 +405,7 @@ namespace TFIKLabi
             ликсическийАнализаторToolStripMenuItem.Name = "ликсическийАнализаторToolStripMenuItem";
             ликсическийАнализаторToolStripMenuItem.Size = new System.Drawing.Size(363, 26);
             ликсическийАнализаторToolStripMenuItem.Text = "Лексический анализатор";
-            ликсическийАнализаторToolStripMenuItem.Click += ликсическийАнализаторToolStripMenuItem_Click;
+            ликсическийАнализаторToolStripMenuItem.Click += лексическийАнализаторToolStripMenuItem_Click;
             // 
             // Form1
             // 
