@@ -805,23 +805,6 @@ namespace TFIKLabi
         private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            string filePath = @"help.html";
-
-            try
-            {
-                Process.Start(filePath);
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    Process.Start("cmd", $"/c start {filePath}");
-                }
-                catch (Exception innerEx)
-                {
-                    MessageBox.Show("Ошибка при открытии файла: " + innerEx.Message);
-                }
-            }
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -891,21 +874,24 @@ namespace TFIKLabi
 
         private void пускToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var RichTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            var RichTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (tabControl1.SelectedTab != null)
+            {
+                var RichTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                var RichTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
 
-            try
-            {
-                sertch = new Sertch(RichTextBox1.Text);
-                RichTextBox2.Text = sertch.GetResult();
+                try
+                {
+                    sertch = new Sertch(RichTextBox1.Text);
+                    RichTextBox2.Text = sertch.GetResult();
+                }
+                catch (Exception ex)
+                {
+                    //RichTextBox2.Clear();
+                    MessageBox.Show($"Ошибка записи файлов! - {ex.Message}", "Ошибка!", MessageBoxButtons.OK);
+                }
+                //SearchFileNames();
+                //Falss();
             }
-            catch (Exception ex)
-            {
-                //RichTextBox2.Clear();
-                MessageBox.Show($"Ошибка записи файлов! - {ex.Message}", "Ошибка!", MessageBoxButtons.OK);
-            }
-            //SearchFileNames();
-            //Falss();
         }
 
 
@@ -943,167 +929,576 @@ namespace TFIKLabi
 
         private void лексическийАнализаторToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-
-            richTextBox2.Clear();
-            richTextBox2.Enabled = true;
-            string[] type = new string[4] { "Число", "Скобка", "Знак", "Идентификатор" };
-            List<char> skobka = new List<char>() { ')', '(', '{', '}', '[', ']', '<', '>', '|' };
-            List<char> znak = new List<char>() { '!', ',', '.', ':', ';', '?', '-', '_', '+', '=', '*', '%', '~', '/', '\\', '&' };
-            bool flag = false; // для обозначения была ли уже точка или запятая в строке число.
-            int lineIndex = 0;
-            int startPositionInStr = 0;
-            int startPositionOfWord = 0;
-            int endPositionOfWord = 0;
-
-            string identif = "";
-            string chislo = "";
-            for (int i = 0; i < richTextBox1.TextLength; i++)
+            try
             {
-                //Продолжение записи числа
-                if (chislo.Length > 0)
+                var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+
+                richTextBox2.Clear();
+                richTextBox2.Enabled = true;
+                string[] type = new string[4] { "Число", "Скобка", "Знак", "Идентификатор" };
+                List<char> skobka = new List<char>() { ')', '(', '{', '}', '[', ']', '<', '>', '|' };
+                List<char> znak = new List<char>() { '!', ',', '.', ':', ';', '?', '-', '_', '+', '=', '*', '%', '~', '/', '\\', '&' };
+                bool flag = false; // для обозначения была ли уже точка или запятая в строке число.
+                int lineIndex = 0;
+                int startPositionInStr = 0;
+                int startPositionOfWord = 0;
+                int endPositionOfWord = 0;
+
+                string identif = "";
+                string chislo = "";
+                for (int i = 0; i < richTextBox1.TextLength; i++)
                 {
-                    if ((Char.IsDigit(richTextBox1.Text[i]) || richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".") && i != richTextBox1.TextLength - 1)
+                    //Продолжение записи числа
+                    if (chislo.Length > 0)
                     {
-                        if (richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".")
+                        if ((Char.IsDigit(richTextBox1.Text[i]) || richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".") && i != richTextBox1.TextLength - 1)
                         {
-                            if (flag == false)
+                            if (richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".")
                             {
-                                chislo += richTextBox1.Text[i].ToString();
-                                flag = true;
+                                if (flag == false)
+                                {
+                                    chislo += richTextBox1.Text[i].ToString();
+                                    flag = true;
+                                }
+                                else
+                                {
+                                    endPositionOfWord = startPositionOfWord + chislo.Length;
+                                    richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                                    richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
+                                    Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                                    leks.Add(a);
+                                    chislo = "";
+                                    flag = false;
+                                }
                             }
                             else
-                            {
-                                endPositionOfWord = startPositionOfWord + chislo.Length;
-                                richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
-                                richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
-                                Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
-                                leks.Add(a);
-                                chislo = "";
-                                flag = false;
-                            }
+                                chislo += richTextBox1.Text[i].ToString();
                         }
                         else
-                            chislo += richTextBox1.Text[i].ToString();
-                    }
-                    else
-                    {
-                        if (i == richTextBox1.TextLength - 1)
                         {
-                            chislo += richTextBox1.Text[i].ToString();
+                            if (i == richTextBox1.TextLength - 1)
+                            {
+                                chislo += richTextBox1.Text[i].ToString();
+                            }
+                            if (chislo[chislo.Length - 1] == '.' || chislo[chislo.Length - 1] == ',')
+                            {
+                                chislo.Remove(chislo.Length);
+                            }
+                            endPositionOfWord = startPositionOfWord + chislo.Length;
+                            richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                            richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
+                            Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                            leks.Add(a);
+                            chislo = "";
+                            flag = false;
                         }
-                        if (chislo[chislo.Length - 1] == '.' || chislo[chislo.Length - 1] == ',')
-                        {
-                            chislo.Remove(chislo.Length);
-                        }
-                        endPositionOfWord = startPositionOfWord + chislo.Length;
-                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
-                        richTextBox2.Text += " Тип: " + type[0] + ", Лексема: " + chislo + "\n";
-                        Leksem a = new Leksem(type[0], chislo, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
-                        leks.Add(a);
-                        chislo = "";
-                        flag = false;
                     }
-                }
-                //Продолжение записи идентификатора
-                else if (identif.Length > 0)
-                {
-                    if ((Char.IsDigit(richTextBox1.Text[i]) || Char.IsLetter(richTextBox1.Text[i])) && i != richTextBox1.TextLength - 1)
+                    //Продолжение записи идентификатора
+                    else if (identif.Length > 0)
                     {
-                        identif += richTextBox1.Text[i].ToString();
-                    }
-                    else
-                    {
-                        if (i == richTextBox1.TextLength - 1)
+                        if ((Char.IsDigit(richTextBox1.Text[i]) || Char.IsLetter(richTextBox1.Text[i])) && i != richTextBox1.TextLength - 1)
                         {
                             identif += richTextBox1.Text[i].ToString();
                         }
-                        endPositionOfWord = startPositionOfWord + identif.Length;
-                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
-                        richTextBox2.Text += " Тип: " + type[3] + ", Лексема: " + identif + "\n";
-                        Leksem a = new Leksem(type[3], identif, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                        else
+                        {
+                            if (i == richTextBox1.TextLength - 1)
+                            {
+                                identif += richTextBox1.Text[i].ToString();
+                            }
+                            endPositionOfWord = startPositionOfWord + identif.Length;
+                            richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + endPositionOfWord;
+                            richTextBox2.Text += " Тип: " + type[3] + ", Лексема: " + identif + "\n";
+                            Leksem a = new Leksem(type[3], identif, startPositionOfWord + 1, endPositionOfWord, lineIndex + 1);
+                            leks.Add(a);
+                            identif = "";
+                        }
+                    }
+                    //Начало числа
+                    else if (Char.IsDigit(richTextBox1.Text[i]))
+                    {
+                        lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                        startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                        startPositionOfWord = i - startPositionInStr;
+                        chislo += richTextBox1.Text[i].ToString();
+                    }
+                    //Начало индентификатора
+                    else if (Char.IsLetter(richTextBox1.Text[i]))
+                    {
+                        lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                        startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                        startPositionOfWord = i - startPositionInStr;
+                        identif += richTextBox1.Text[i].ToString();
+                    }
+                    else if (skobka.Contains(richTextBox1.Text[i]))
+                    {
+                        lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                        startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                        startPositionOfWord = i - startPositionInStr;
+                        endPositionOfWord = startPositionOfWord;
+                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
+                        richTextBox2.Text += " Тип: " + type[1] + ", Лексема: " + richTextBox1.Text[i] + "\n";
+                        Leksem a = new Leksem(type[1], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
                         leks.Add(a);
-                        identif = "";
+                    }
+                    else if (znak.Contains(richTextBox1.Text[i]))
+                    {
+                        lineIndex = richTextBox1.GetLineFromCharIndex(i);
+                        startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
+                        startPositionOfWord = i - startPositionInStr;
+                        endPositionOfWord = startPositionOfWord;
+                        richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
+                        richTextBox2.Text += " Тип: " + type[2] + ", Лексема: " + richTextBox1.Text[i] + "\n";
+                        Leksem a = new Leksem(type[2], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
+                        leks.Add(a);
                     }
                 }
-                //Начало числа
-                else if (Char.IsDigit(richTextBox1.Text[i]))
-                {
-                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
-                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
-                    startPositionOfWord = i - startPositionInStr;
-                    chislo += richTextBox1.Text[i].ToString();
-                }
-                //Начало индентификатора
-                else if (Char.IsLetter(richTextBox1.Text[i]))
-                {
-                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
-                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
-                    startPositionOfWord = i - startPositionInStr;
-                    identif += richTextBox1.Text[i].ToString();
-                }
-                else if (skobka.Contains(richTextBox1.Text[i]))
-                {
-                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
-                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
-                    startPositionOfWord = i - startPositionInStr;
-                    endPositionOfWord = startPositionOfWord;
-                    richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
-                    richTextBox2.Text += " Тип: " + type[1] + ", Лексема: " + richTextBox1.Text[i] + "\n";
-                    Leksem a = new Leksem(type[1], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
-                    leks.Add(a);
-                }
-                else if (znak.Contains(richTextBox1.Text[i]))
-                {
-                    lineIndex = richTextBox1.GetLineFromCharIndex(i);
-                    startPositionInStr = richTextBox1.GetFirstCharIndexFromLine(lineIndex);
-                    startPositionOfWord = i - startPositionInStr;
-                    endPositionOfWord = startPositionOfWord;
-                    richTextBox2.Text += "Номер строки: " + (lineIndex + 1) + " Начало: " + (startPositionOfWord + 1) + " Конец: " + (endPositionOfWord + 1);
-                    richTextBox2.Text += " Тип: " + type[2] + ", Лексема: " + richTextBox1.Text[i] + "\n";
-                    Leksem a = new Leksem(type[2], richTextBox1.Text[i].ToString(), startPositionOfWord + 1, endPositionOfWord + 1, lineIndex + 1);
-                    leks.Add(a);
-                }
-            }
+            } catch (Exception ex) { }
 
 
         }
 
         private void сToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-            richTextBox2.Clear();
-            turnBack = false;
-            open = false;
-            close = false;
-            for (int i = 0; i < richTextBox1.TextLength; i++)
+            try
             {
-                if (turnBack)
+                var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+                richTextBox2.Clear();
+                turnBack = false;
+                open = false;
+                close = false;
+                for (int i = 0; i < richTextBox1.TextLength; i++)
                 {
-                    i--;
-                    turnBack = false;
-                }
-                E(ref i);
+                    if (turnBack)
+                    {
+                        i--;
+                        turnBack = false;
+                    }
+                    E(ref i);
 
-            }
+                }
+            } catch (NullReferenceException ex) { }
         }
 
 
 
         private void анализаторToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-            richTextBox2.Clear();
-            fix = "";
-            countErrs = 0;
-            for (int i = 0; i < richTextBox1.TextLength; i++)
+            try
             {
-                FuncCH(ref i);
+                var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+                var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+                richTextBox2.Clear();
+                fix = "";
+                countErrs = 0;
+                for (int i = 0; i < richTextBox1.TextLength; i++)
+                {
+                    FuncCH(ref i);
+                }
+                richTextBox2.Text += $"Общее количество ошибок: {countErrs} \n Ожидаемая константа: {fix}";
+            } catch (Exception ex) { }
+        }
+
+        private void грамматикаToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Грамматика");
+            try
+            {
+                tabPage.Tag = "Grammar";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "grammatika4.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
             }
-            richTextBox2.Text += $"Общее количество ошибок: {countErrs} \n Ожидаемая константа: {fix}";
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void языкToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Язык");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "langr.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void классификацияToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Классификация");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "clas4.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+        
+        private void таблицаКодовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Таблица кодов");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "cod.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void диаграммаСостоянийToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Диаграмма состояний");
+            try
+            {
+                tabPage.Tag ="";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "condition.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void тестовыйПримерToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Тестовый пример");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "test4.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void грамматикаToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Грамматика");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "grammatika5.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void языкToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Язык");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "langr5.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void классификацияToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Классификация");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "class5.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void тестовыйПримерToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Тестовый пример");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "test5.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void грамматикаToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Грамматика");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "grammatika6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void языкToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Язык");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "langr6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void классификацияToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Классификация");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "clas6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void графСостоянийToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Граф состояний");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "grafcond6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void методНейтрализацииToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Метод Нейтрализации");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "metod6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
+        }
+
+        private void тестовыйПримерToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            TabPage tabPage = new TabPage("Тестовый пример");
+            try
+            {
+                tabPage.Tag = "";
+
+                tabControl1.TabPages.Add(tabPage);
+
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.ImageLocation = "test6.jpg";
+                pictureBox.Size = new Size(780, 450);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+                tabPage.Controls.Add(pictureBox);
+                tabControl1.SelectedTab = tabPage;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening the picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabControl1.TabPages.Remove(tabPage);
+            }
         }
     }
 }
