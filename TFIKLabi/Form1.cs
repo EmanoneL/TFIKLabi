@@ -6,9 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace TFIKLabi
 {
+
     public partial class Form1 : Form
     {
         string filePath;
@@ -17,14 +19,406 @@ namespace TFIKLabi
         List<Leksem> leks = new List<Leksem>();
         Sertch sertch;
 
+        //RichTextBox richTextBox1;
+        //RichTextBox richTextBox2;
 
-
+        bool err = false;
+        // Преобразованная константа
+        string fix = "";
+        // Количество ошибок
+        int countErrs = 0;
+        // Ожидаемые символы
+        List<char> numbers = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        bool turnBack ;
+        bool open ;
+        bool close ;
         public Form1()
         {
             InitializeComponent();
             //toolStripMenuItem1.Click += ToolStripMenuItem1_Click;
+            //if (tabControl1.SelectedTab != null)
+            //{
+            //   var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            //   var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            //}
+
+        } 
+        void E(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (i == 0) richTextBox2.Text += "E";
+            else richTextBox2.Text += "-E";
+
+            T(ref i);
+            A(ref i);
 
         }
+        void A(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            richTextBox2.Text += "-A";
+            if (richTextBox1.Text[i].ToString() == "+")
+            {
+                richTextBox2.Text += "-+";
+                i++;
+                T(ref i);
+                A(ref i);
+            }
+            else if (richTextBox1.Text[i].ToString() == "-")
+            {
+                richTextBox2.Text += "-'-'";
+                i++;
+                T(ref i);
+                A(ref i);
+            }
+            else
+            {
+                richTextBox2.Text += "-ε";
+                if (close)
+                {
+                    richTextBox2.Text += "-)";
+                    open = false;
+                    close = false;
+                }
+                if (err)
+                {
+                    richTextBox2.Text += "-ER";
+                    open = false;
+                    close = false;
+                    err = false;
+                }
+                return;
+            }
+        }
+        void T(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            richTextBox2.Text += "-T";
+            O(ref i);
+            B(ref i);
+        }
+        void O(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            richTextBox2.Text += "-O";
+            string number = "";
+            string id = "";
+            for (; i < richTextBox1.TextLength; i++)
+            {
+                if (open && !close && !Char.IsDigit(richTextBox1.Text[i]) && !Char.IsLetter(richTextBox1.Text[i]) && richTextBox1.Text[i] != '+' && richTextBox1.Text[i] != '*'
+                    && richTextBox1.Text[i] != '-' && richTextBox1.Text[i] != '/' && richTextBox1.Text[i] != ')' && richTextBox1.Text[i] != '.' && richTextBox1.Text[i] != ',')
+                {
+                    // Написать для дробного числа (обработать точку)
+                    richTextBox2.Text += "-ER";
+                    open = false;
+                    close = false;
+                    turnBack = true;
+                    return;
+                }
+                if (open && !close && richTextBox1.Text[i] == ')' && (number.Length > 0 || id.Length > 0))
+                {
+                    close = true;
+                    if (number.Length > 0) richTextBox2.Text += "-num";
+                    else richTextBox2.Text += "-id";
+                    return;
+                }
+                else if (open && !close && richTextBox1.Text[i] == ')' && number.Length == 0 && id.Length == 0)
+                {
+                    close = true;
+                    return;
+                }
+                if (number.Length > 0)
+                {
+                    if ((Char.IsDigit(richTextBox1.Text[i]) || richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".") && i != richTextBox1.TextLength - 1)
+                    {
+                        if (richTextBox1.Text[i].ToString() == "," || richTextBox1.Text[i].ToString() == ".")
+                        {
+                            if (number.Contains(".") || number.Contains(","))
+                            {
+                                // Если целое число заканчивается на две точки, необходимо вернуться на 2 символа назад, а если дробное и заканчивается на точку, тогда на 1 символ
+                                if (number[number.Length - 1] == '.' || number[number.Length - 1] == ',') i -= 2;
+                                else i--;
+                                number = "";
+                                richTextBox2.Text += "-num";
+                                return;
+                            }
+                            else
+                            {
+                                number += richTextBox1.Text[i].ToString();
+
+                            }
+                        }
+                        else
+                            number += richTextBox1.Text[i].ToString();
+                    }
+                    else
+                    {
+                        if (i == richTextBox1.TextLength - 1 && Char.IsDigit(richTextBox1.Text[i]))
+                        {
+                            number += richTextBox1.Text[i].ToString();
+                            if (open && !close) err = true;
+                        }
+                        else if (i == richTextBox1.TextLength - 1 && !Char.IsDigit(richTextBox1.Text[i]))
+                        {
+                            err = true;
+                            // Если целое число заканчивается на две точки, необходимо вернуться на 2 символа назад, а если дробное и заканчивается на точку, тогда на 1 символ
+                            if (number[number.Length - 1] == '.' || number[number.Length - 1] == ',') i -= 2;
+                            else if (number.Contains('.') || number.Contains(',')) i--;
+
+                        }
+                        else if (i < richTextBox1.TextLength - 1 && !Char.IsDigit(richTextBox1.Text[i]) && richTextBox1.Text[i] != '*' && richTextBox1.Text[i] != '+'
+                            && richTextBox1.Text[i] != '/' && richTextBox1.Text[i] != '-') i--;
+                        richTextBox2.Text += "-num";
+                        return;
+                    }
+                }
+                else if (id.Length > 0)
+                {
+                    if ((Char.IsDigit(richTextBox1.Text[i]) || Char.IsLetter(richTextBox1.Text[i])) && i != richTextBox1.TextLength - 1)
+                    {
+                        id += richTextBox1.Text[i].ToString();
+                    }
+                    else
+                    {
+                        if (i == richTextBox1.TextLength - 1 && (Char.IsDigit(richTextBox1.Text[i]) || Char.IsLetter(richTextBox1.Text[i])))
+                        {
+                            id += richTextBox1.Text[i].ToString();
+                            err = true;
+                        }
+                        id = "";
+                        richTextBox2.Text += "-id";
+                        return;
+                    }
+                }
+                //Начало числа
+                else if (Char.IsDigit(richTextBox1.Text[i]))
+                {
+                    if (i < richTextBox1.TextLength - 1) number += richTextBox1.Text[i].ToString();
+                    else
+                    {
+                        richTextBox2.Text += "-num";
+                        return;
+                    }
+                }
+                //Начало индентификатора
+                else if (Char.IsLetter(richTextBox1.Text[i]))
+                {
+                    if (i < richTextBox1.TextLength - 1) id += richTextBox1.Text[i].ToString();
+                    else
+                    {
+                        richTextBox2.Text += "-id";
+                        return;
+                    }
+                }
+                else if (richTextBox1.Text[i] == '(')
+                {
+                    open = true;
+                    richTextBox2.Text += "-(";
+                    i++;
+                    E(ref i);
+                    return;
+                }
+                else
+                {
+                    open = false;
+                    richTextBox2.Text += "-ER";
+                    return;
+                }
+            }
+        }
+        void B(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault(); 
+            richTextBox2.Text += "-B";
+            if (richTextBox1.Text[i].ToString() == "*")
+            {
+                richTextBox2.Text += "-*";
+                i++;
+                O(ref i);
+                B(ref i);
+            }
+            else if (richTextBox1.Text[i].ToString() == "/")
+            {
+                richTextBox2.Text += "-/";
+                i++;
+                O(ref i);
+                B(ref i);
+            }
+            else
+            {
+                richTextBox2.Text += "-ε";
+                return;
+            }
+        }
+
+        void FixErrors(ref int i, char replace, List<char> arr)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            string temp = "";
+            while (!arr.Contains(richTextBox1.Text[i]))
+            {
+                temp += richTextBox1.Text[i];
+                i++;
+                if (i == richTextBox1.TextLength) break;
+            }
+            if (i == richTextBox1.TextLength)
+            {
+                richTextBox2.Text += "Найдена ошибка :" + temp + " , индекс ошибки: " + (i - temp.Length + 1) + $" Ожидалось число\n";
+                replace = '1';
+            }
+            else
+            {
+                if (Char.IsDigit(richTextBox1.Text[i]))
+                {
+                    richTextBox2.Text += "Найдена ошибка :" + temp + " , индекс ошибки: " + (i - temp.Length + 1) + $" Ожидалось число\n";
+                    replace = '1';
+                }
+                else if (richTextBox1.Text[i] == '+')
+                {
+                    richTextBox2.Text += "Найдена ошибка :" + temp + " , индекс ошибки: " + (i - temp.Length + 1) + $" Ожидался знак +\n";
+                    replace = '+';
+                    if (i < richTextBox1.TextLength) i++;
+                }
+                else if (richTextBox1.Text[i] == '-')
+                {
+                    richTextBox2.Text += "Найдена ошибка :" + temp + " , индекс ошибки: " + (i - temp.Length + 1) + $" Ожидался знак -\n";
+                    replace = '-';
+                    if (i < richTextBox1.TextLength) i++;
+                }
+                else if (richTextBox1.Text[i] == 'E')
+                {
+                    richTextBox2.Text += "Найдена ошибка :" + temp + " , индекс ошибки: " + (i - temp.Length + 1) + $" Ожидалось E\n";
+                    replace = 'E';
+                    if (i < richTextBox1.TextLength) i++;
+                }
+            }
+
+            fix += replace;
+            countErrs++;
+        }
+        void FuncCH(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (richTextBox1.Text[i] == '+' || richTextBox1.Text[i] == '-')
+            {
+                fix += richTextBox1.Text[i];
+                i++;
+            }
+            FuncCHBZ(ref i);
+        }
+        void FuncCHBZ(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (richTextBox1.Text[i] == 'E')
+            {
+                fix += richTextBox1.Text[i];
+                i++;
+                FuncCEL(ref i);
+            }
+            else
+            {
+                FuncDCH(ref i);
+                if (i < richTextBox1.TextLength && richTextBox1.Text[i] == 'E')
+                {
+                    fix += richTextBox1.Text[i];
+                    i++;
+                    FuncCEL(ref i);
+                }
+                else if (i < richTextBox1.TextLength && richTextBox1.Text[i] != 'E')
+                {
+                    numbers = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                    List<char> numbersE = numbers;
+                    numbersE.Add('E');
+                    FixErrors(ref i, 'E', numbersE);
+                    if (i < richTextBox1.TextLength)
+                        FuncCEL(ref i);
+                }
+            }
+
+        }
+        void FuncDCH(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (richTextBox1.Text[i] == '.')
+            {
+                fix += richTextBox1.Text[i];
+                i++;
+                FuncCELBZ(ref i);
+            }
+
+            else
+            {
+                FuncCELBZ(ref i);
+            }
+        }
+        void FuncCEL(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (richTextBox1.Text[i] == '+' || richTextBox1.Text[i] == '-')
+            {
+                fix += richTextBox1.Text[i];
+                i++;
+            }
+            FuncCELBZ(ref i);
+        }
+        void FuncCELBZ(ref int i)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            if (Char.IsDigit(richTextBox1.Text[i]))
+            {
+                while (Char.IsDigit(richTextBox1.Text[i]))
+                {
+                    fix += richTextBox1.Text[i];
+                    i++;
+                    if (i == richTextBox1.TextLength) return;
+                }
+                if (richTextBox1.Text[i] == '.')
+                {
+                    fix += richTextBox1.Text[i];
+                    i++;
+                    if (Char.IsDigit(richTextBox1.Text[i]))
+                        FuncCELBZ(ref i);
+                    else if (richTextBox1.Text[i] != 'E')
+                    {
+                        FixErrors(ref i, '1', numbers);
+                        FuncCELBZ(ref i);
+                    }
+                }
+                else if (richTextBox1.Text[i] != 'E' && richTextBox1.Text[i] != '+' && richTextBox1.Text[i] != '-')
+                {
+                    numbers = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                    List<char> plusMinus = numbers;
+                    plusMinus.AddRange(new char[] { '+', '-', 'E' });
+                    FixErrors(ref i, '+', plusMinus);
+                    if (i < richTextBox1.TextLength)
+                        FuncCELBZ(ref i);
+                }
+            }
+            else if (richTextBox1.Text[i] != 'E' && richTextBox1.Text[i] != '+' && richTextBox1.Text[i] != '-')
+            {
+                numbers = new List<char>() { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                List<char> plusMinus = numbers;
+                plusMinus.AddRange(new char[] { '+', '-', 'E' });
+                FixErrors(ref i, '+', plusMinus);
+                if (i < richTextBox1.TextLength)
+                    FuncCELBZ(ref i);
+            }
+        }
+
+
+
+        
 
         private string getNewFileName()
         {
@@ -550,8 +944,8 @@ namespace TFIKLabi
         private void лексическийАнализаторToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
-            var richTextBox2= tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
-            
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+
             richTextBox2.Clear();
             richTextBox2.Enabled = true;
             string[] type = new string[4] { "Число", "Скобка", "Знак", "Идентификатор" };
@@ -672,9 +1066,45 @@ namespace TFIKLabi
                     leks.Add(a);
                 }
             }
-        
 
+
+        }
+
+        private void сToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            richTextBox2.Clear();
+            turnBack = false;
+            open = false;
+            close = false;
+            for (int i = 0; i < richTextBox1.TextLength; i++)
+            {
+                if (turnBack)
+                {
+                    i--;
+                    turnBack = false;
+                }
+                E(ref i);
+
+            }
+        }
+
+
+
+        private void анализаторToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var richTextBox1 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().FirstOrDefault();
+            var richTextBox2 = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Skip(1).FirstOrDefault();
+            richTextBox2.Clear();
+            fix = "";
+            countErrs = 0;
+            for (int i = 0; i < richTextBox1.TextLength; i++)
+            {
+                FuncCH(ref i);
+            }
+            richTextBox2.Text += $"Общее количество ошибок: {countErrs} \n Ожидаемая константа: {fix}";
+        }
     }
-}
 }
 
